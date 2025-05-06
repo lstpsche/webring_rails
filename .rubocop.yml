@@ -1,0 +1,117 @@
+plugins:
+  - rubocop-rails
+
+AllCops:
+  Exclude:
+    - db/migrate/*
+    - db/schema.rb
+    - config/**/*
+    - vendor/**/*
+    - bin/*
+    - Gemfile.lock
+    - tmp/**/*
+  NewCops: disable
+  SuggestExtensions: false
+  TargetRubyVersion: 3.2
+
+Naming/VariableNumber:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: never
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: true
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true
+
+Layout/MultilineMethodCallBraceLayout:
+  EnforcedStyle: new_line
+
+Metrics/AbcSize:
+  Max: 17
+  Exclude:
+    - lib/tasks/**/*
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Layout/LineLength:
+  Max: 120
+  AllowedPatterns: ['^ *#'] # ignore comments (only ones that take up the whole line)
+
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/ClassLength:
+  Max: 200
+
+Metrics/BlockLength:
+  Exclude:
+    - lib/tasks/**/*
+
+Metrics/ParameterLists:
+  Max: 10
+
+Naming/RescuedExceptionsVariableName:
+  PreferredName: error
+
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+Style/Documentation:
+  Enabled: false
+
+Style/FormatStringToken:
+  EnforcedStyle: template
+
+Style/NumericLiterals:
+  Enabled: false
+
+Style/RegexpLiteral:
+  EnforcedStyle: slashes
+  AllowInnerSlashes: true
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: either_consistent
+
+Style/EmptyCaseCondition:
+  Enabled: false
+
+Layout/SpaceAroundOperators:
+  EnforcedStyleForExponentOperator: space
+
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - development
+    - staging
+    - test
+
+Rails/TimeZone:
+  Enabled: false
+
+Rails/Delegate:
+  Enabled: false
