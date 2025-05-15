@@ -3,13 +3,10 @@ plugins:
 
 AllCops:
   Exclude:
-    - db/migrate/*
-    - db/schema.rb
     - config/**/*
-    - vendor/**/*
     - bin/*
     - Gemfile.lock
-    - tmp/**/*
+    - lib/generators/webring/member/templates/migration.rb
   NewCops: disable
   SuggestExtensions: false
   TargetRubyVersion: 3.2
