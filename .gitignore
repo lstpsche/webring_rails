@@ -1,5 +1,9 @@
+.DS_Store
+
 /.bundle/
 /doc/
 /log/*.log
 /pkg/
 /tmp/
+/assets/builds/
+/node_modules/

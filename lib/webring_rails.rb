@@ -1,6 +1,12 @@
-require 'webring_rails/version'
-require 'webring_rails/engine'
+require 'webring/version'
+require 'webring/engine'
 
 module Webring
-  # Your code goes here...
+  mattr_accessor :default_status
+  @@default_status = :pending
+
+  # Setup method for configuration
+  def self.setup
+    yield self
+  end
 end

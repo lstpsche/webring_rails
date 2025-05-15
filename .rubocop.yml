@@ -20,6 +20,9 @@ Naming/VariableNumber:
 Style/FrozenStringLiteralComment:
   EnforcedStyle: never
 
+Style/ClassVars:
+  Enabled: false
+
 Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: true
 
