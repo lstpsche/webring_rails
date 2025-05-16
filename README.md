@@ -21,7 +21,7 @@ Run the installation generator:
 $ rails generate webring:install
 ```
 
-This will create an initializer file at `config/initializers/webring.rb` and mount the engine in your routes.
+This will mount the engine in your routes.
 
 ## Usage
 
@@ -36,7 +36,6 @@ $ rails generate webring:install
 ```
 
 This generator:
-- Creates a webring initializer
 - Mounts the Webring engine in your routes.rb
 
 #### Member Model Generator
@@ -59,16 +58,6 @@ $ rails generate webring:controller
 This generator:
 - Creates the Webring::NavigationController with '/next', '/previous', and '/random' actions
 - Adds navigation routes to your routes.rb file
-
-## Configuration
-
-You can configure the webring in the initializer file at `config/initializers/webring.rb`:
-
-```ruby
-Webring.setup do |config|
-  config.default_status = :pending
-end
-```
 
 ## Models
 

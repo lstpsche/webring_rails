@@ -16,15 +16,11 @@ Generate a navigation controller:
 
 This will create the Webring::NavigationController and add its routes to your routes.rb file.
 
-3. Configure Initializer [optional customization]
--------------------------------------------------
-Review the initializer file at config/initializers/webring.rb and adjust settings if needed.
-
-4. Update Your Routes [optional customization]
+3. Update Your Routes [optional customization]
 ----------------------------------------------
 The engine is mounted at /webring. You can change this in your routes.rb file.
 
-5. Add UI Elements
+4. Add UI Elements
 ------------------
 Add navigation links to your views to navigate through the webring:
 
