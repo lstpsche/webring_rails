@@ -48,13 +48,17 @@ Run the installation generator:
 $ rails generate webring:install
 ```
 
-This will mount the engine in your routes.
+> [!TIP]
+> The installation generator will automatically mount the engine in your routes.rb file, making it ready to use.
 
 ## Usage
 
 ### Generators
 
 WebringRails provides several generators to help you set up webring functionality in your application.
+
+> [!IMPORTANT]
+> Make sure to run the generators in the order listed below for the best setup experience.
 
 #### Installation Generator
 
@@ -90,6 +94,9 @@ This generator:
 
 ### Webring::Member
 
+> [!NOTE]
+> The Member model is the core component of your webring, representing each site in the ring.
+
 The Member model includes:
 
 - Validations for presence and uniqueness of `url` and uniqueness of `name`
@@ -102,6 +109,9 @@ The Member model includes:
 ## Modules
 
 ### Webring::Navigation
+
+> [!TIP]
+> The Navigation module is designed to be highly extensible. You can easily override its methods to customize the navigation behavior for your specific needs.
 
 The Navigation module provides methods for navigating through members in a webring pattern. It's designed to be extended by models that act as webring members.
 
@@ -128,6 +138,9 @@ The module provides three core methods:
   - If the source member is the only one in the ring, it returns that same member
 
 #### Usage in Models
+
+> [!WARNING]
+> Make sure your model has an `id` column before extending the Navigation module, as it's required for the default implementation.
 
 The module is designed to be extended in your model:
 
@@ -202,6 +215,9 @@ end
 ## Controllers
 
 ### Webring::NavigationController
+
+> [!IMPORTANT]
+> The Navigation controller is responsible for handling all webring navigation requests and redirecting users between member sites.
 
 Navigation controller manages the webring navigation flow for end users visiting member sites:
 
@@ -336,7 +352,8 @@ The implementation can be found in the application layout file:
 
 ### Testing
 
-As of now, there are no tests.
+> [!WARNING]
+> As of now, there are no tests. Contributions to add test coverage are welcome!
 
 ## License
 
