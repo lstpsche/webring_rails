@@ -2,6 +2,33 @@
 
 A Rails engine for creating and managing a webring.
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Generators](#generators)
+    - [Installation Generator](#installation-generator)
+    - [Member Model Generator](#member-model-generator)
+    - [Navigation Controller Generator](#navigation-controller-generator)
+- [Models](#models)
+  - [Webring::Member](#webringmember)
+- [Modules](#modules)
+  - [Webring::Navigation](#webringnavigation)
+    - [Key Features](#key-features)
+    - [Available Methods](#available-methods)
+    - [Usage in Models](#usage-in-models)
+    - [Implementation Example](#implementation-example)
+    - [Customizing Navigation Behavior](#customizing-navigation-behavior)
+- [Controllers](#controllers)
+  - [Webring::NavigationController](#webringnavigationcontroller)
+    - [How to Use the Navigation Controller](#how-to-use-the-navigation-controller)
+    - [Customizing Navigation Behavior](#customizing-navigation-behavior-1)
+  - [Webring::MembersController](#webringmemberscontroller)
+- [Development](#development)
+  - [Migrations](#migrations)
+  - [Tailwind CSS Integration](#tailwind-css-integration)
+  - [Testing](#testing)
+
 ## Installation
 
 Add this line to your application's Gemfile:
