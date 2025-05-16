@@ -72,6 +72,106 @@ The Member model includes:
   - `find_previous(source_member_id)` - Finds the previous member before the given ID
   - `find_random(source_member_id: nil)` - Finds a random member, excluding the source member
 
+## Modules
+
+### Webring::Navigation
+
+The Navigation module provides methods for navigating through members in a webring pattern. It's designed to be extended by models that act as webring members.
+
+#### Key Features
+
+- **Webring-style navigation**: Implements the circular navigation pattern typical of webrings
+- **ID-based member ordering**: Uses database IDs to determine the sequence of members
+- **Edge case handling**: Properly handles wraparound at the beginning and end of the ring
+
+#### Available Methods
+
+The module provides three core methods:
+
+- `find_next(source_member_id)`: Finds the next member in the ring after the specified member
+  - If the source member is the last in the ring, it returns the first member
+  - Uses descending ID order for navigation
+
+- `find_previous(source_member_id)`: Finds the previous member in the ring before the specified member
+  - If the source member is the first in the ring, it returns the last member
+  - Uses ascending ID order for navigation
+
+- `find_random(source_member_id: nil)`: Finds a random member in the ring
+  - If a source member ID is provided, it excludes that member from the selection
+  - If the source member is the only one in the ring, it returns that same member
+
+#### Usage in Models
+
+The module is designed to be extended in your model:
+
+```ruby
+class YourMember < ApplicationRecord
+  extend Webring::Navigation
+
+  # Your model code...
+end
+```
+
+#### Implementation Example
+
+The `Webring::Member` model extends the Navigation module:
+
+```ruby
+module Webring
+  class Member < ApplicationRecord
+    extend Webring::Navigation
+
+    # Member model implementation...
+  end
+end
+```
+
+This allows you to call navigation methods on the class:
+
+```ruby
+# Find the next member after member with ID 5
+next_member = Webring::Member.find_next(5)
+
+# Find the previous member before member with ID 5
+previous_member = Webring::Member.find_previous(5)
+
+# Find a random member (excluding member with ID 5)
+random_member = Webring::Member.find_random(source_member_id: 5)
+```
+
+#### Customizing Navigation Behavior
+
+You can override the default navigation behavior by creating your own module that includes or extends the Webring::Navigation module:
+
+```ruby
+module YourApp
+  module CustomNavigation
+    include Webring::Navigation
+
+    # Override methods as needed
+    def find_next(source_member_id)
+      # Custom implementation for finding the next member
+      # For example, you might want to order by name instead of ID
+      where('name > ?', find_by(id: source_member_id)&.name)
+        .order(:name)
+        .first || order(:name).first
+    end
+  end
+end
+```
+
+Then apply your custom navigation module to your model:
+
+```ruby
+class YourMember < ApplicationRecord
+  extend YourApp::CustomNavigation
+
+  # Your model code...
+end
+```
+
+**Note**: The Navigation module requires models to have an `id` column for its default implementation.
+
 ## Controllers
 
 ### Webring::NavigationController
