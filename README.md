@@ -67,6 +67,10 @@ The Member model includes:
 
 - Validations for presence and uniqueness of `url` and uniqueness of `name`
 - Automatic population of `name` from `url` if name is not provided
+- Navigation methods for finding next, previous, and random members:
+  - `find_next(source_member_id)` - Finds the next member after the given ID
+  - `find_previous(source_member_id)` - Finds the previous member before the given ID
+  - `find_random(source_member_id: nil)` - Finds a random member, excluding the source member
 
 ## Controllers
 
@@ -80,6 +84,31 @@ Navigation controller manages the webring navigation flow for end users visiting
 
 This controller handles requests that come directly from webring members' sites. When a user clicks a navigation button on a webring widget (displayed on a member's site), the request is sent to this controller with the current member's ID. The controller then determines the appropriate member to navigate to and redirects the user to that member's URL.
 
+#### How to Use the Navigation Controller
+
+To use the navigation controller in your webring implementation, you need to include navigation links on each member's website. These links should point to your application's navigation routes with the `source_member_id` parameter.
+
+Example HTML for your webring widget:
+
+```html
+<div class="webring-widget">
+  <p>This site is part of a webring</p>
+  <nav>
+    <a href="https://your-app.com/webring/previous?source_member_id=123">← Previous</a>
+    <a href="https://your-app.com/webring/random?source_member_id=123">Random</a>
+    <a href="https://your-app.com/webring/next?source_member_id=123">Next →</a>
+  </nav>
+</div>
+```
+
+Replace `123` with the actual member ID and `https://your-app.com` with your application's domain.
+
+The controller handles several cases:
+- If the source member ID is invalid or not found, it returns a 404 "Member not found" response
+- If there are no members in the webring, it returns a 404 "No members in the webring" response
+- For `next` and `previous` actions, if the current member is the last or first respectively, it wraps around to the other end of the ring
+- For `random` action, it ensures the random member is not the same as the source member (unless there's only one member)
+
 #### Customizing Navigation Behavior
 
 If you want to customize the navigation behavior, you can create your own controller that inherits from the default navigation controller:
@@ -91,13 +120,13 @@ class MyNavigationController < Webring::NavigationController
   def next
     # Your custom logic before default behavior
     super
-    # Your custom logic after default behavior
+    # `super` will redirect to member.url, so no code will be executed after this
   end
 
   def previous
     # Completely custom implementation
-    @previous_member = Webring::Member.where("id < ?", params[:current_id]).last
-    redirect_to @previous_member.url
+    @previous_member = Webring::Member.find_previous(params[:source_member_id])
+    redirect_to @previous_member.url, allow_other_host: true
   end
 end
 ```
