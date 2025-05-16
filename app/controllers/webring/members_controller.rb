@@ -4,7 +4,7 @@ module Webring
 
     # GET /webring/members
     def index
-      @members = Member.all
+      @members = Member.all.order(id: :desc)
     end
 
     # GET /webring/members/1
@@ -25,7 +25,7 @@ module Webring
       if @member.save
         redirect_to @member, notice: 'Member was successfully created.'
       else
-        render :new
+        render :new, status: :unprocessable_entity
       end
     end
 
@@ -34,13 +34,14 @@ module Webring
       if @member.update(member_params)
         redirect_to @member, notice: 'Member was successfully updated.'
       else
-        render :edit
+        render :edit, status: :unprocessable_entity
       end
     end
 
     # DELETE /webring/members/1
     def destroy
       @member.destroy
+
       redirect_to members_url, notice: 'Member was successfully destroyed.'
     end
 
@@ -53,7 +54,7 @@ module Webring
 
     # Only allow a list of trusted parameters through.
     def member_params
-      params.require(:member).permit(:name, :url, :status)
+      params.require(:member).permit(:name, :url)
     end
   end
 end

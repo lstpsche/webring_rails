@@ -1,17 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html class='h-full bg-gray-50'>
 <head>
-  <title>Webring rails</title>
+  <title>Webring</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
   <%= yield :head %>
 
-  <%= stylesheet_link_tag    "webring/application", media: "all" %>
+  <script src='https://cdn.tailwindcss.com'></script>
+  <script src='https://cdn.jsdelivr.net/npm/@tailwindcss/forms@0.5.7/dist/cdn.min.js'></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {}
+      },
+      plugins: [
+        tailwindForms
+      ]
+    }
+  </script>
+  <script defer src='https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js'></script>
 </head>
-<body>
+<body class='h-full'>
+  <div class='min-h-full'>
+    <%= render 'webring/shared/navbar' %>
 
-<%= yield %>
-
+    <main>
+      <%= yield %>
+    </main>
+  </div>
 </body>
 </html>

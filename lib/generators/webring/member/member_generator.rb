@@ -32,7 +32,7 @@ module Webring
 
         if File.read(routes_file).include?(mount_point)
           inject_into_file routes_file, after: mount_point do
-            "\n#{cleared_route_content}\n"
+            "\n#{cleared_route_content}"
           end
         else
           route "#{cleared_route_content}\n"
@@ -43,6 +43,10 @@ module Webring
       def self.next_migration_number(dirname)
         next_migration_number = current_migration_number(dirname) + 1
         ActiveRecord::Migration.next_migration_number(next_migration_number)
+      end
+
+      def show_readme
+        readme 'AFTER_INSTALL' if behavior == :invoke
       end
     end
   end
