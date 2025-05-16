@@ -6,7 +6,7 @@ module Webring
       rejected: 2
     }.freeze
 
-    enum :status, STATUSES, default: Webring.default_status, validate: true
+    enum :status, STATUSES, default: :pending, validate: true
 
     validates :url, presence: true, uniqueness: true
     validates :name, uniqueness: true, if: -> { name.present? }
