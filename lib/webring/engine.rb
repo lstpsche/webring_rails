@@ -25,7 +25,7 @@ module Webring
 
     # configure asset precompilation
     initializer 'webring.assets' do |app|
-      app.config.assets.precompile += %w[webring_manifest.js webring/tailwind.css]
+      app.config.assets.precompile += %w[webring_manifest.js]
       app.config.assets.paths << root.join('app', 'assets', 'builds')
     end
 

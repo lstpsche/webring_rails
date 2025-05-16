@@ -1,0 +1,7 @@
+Webring::Member has been installed successfully! Next steps:
+
+1. Run migration:
+   rails db:migrate
+
+2. Take a look at the generated model:
+   app/models/webring/member.rb

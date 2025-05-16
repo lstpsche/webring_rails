@@ -45,7 +45,7 @@ $ rails generate webring:member
 ```
 
 This generator:
-- Creates the Webring::Member model with name, url, and status fields
+- Creates the Webring::Member model with name and url fields
 - Creates a migration for the members table
 - Adds member routes to your routes.rb file
 
@@ -65,7 +65,6 @@ This generator:
 
 The Member model includes:
 
-- `status` enum with values: `:pending`, `:approved`, `:rejected`
 - Validations for presence and uniqueness of `url` and uniqueness of `name`
 - Automatic population of `name` from `url` if name is not provided
 
@@ -97,7 +96,7 @@ class MyNavigationController < Webring::NavigationController
 
   def previous
     # Completely custom implementation
-    @previous_member = Webring::Member.approved.where("id < ?", params[:current_id]).last
+    @previous_member = Webring::Member.where("id < ?", params[:current_id]).last
     redirect_to @previous_member.url
   end
 end
@@ -151,26 +150,32 @@ You don't need to copy migrations to the dummy app, it looks for them in the eng
 
 ### Tailwind CSS Integration
 
-This gem comes with Tailwind CSS integration out of the box. When running the server in development mode:
+This gem includes Tailwind CSS via CDN for simplicity and ease of use. There's no build process required - the CDN automatically handles:
 
-```bash
-bin/rails server
-# or bin/rails s
-# or rails s
-```
+1. Loading the latest version of Tailwind CSS
+2. Just-in-time compilation of styles
+3. The Tailwind Forms plugin for enhanced form styling
 
-The following will happen automatically:
+The CDN approach provides several benefits:
+- No build pipeline required
+- Smaller bundle size for development
+- Quick prototyping and development experience
 
-1. Tailwind CSS will be built if it doesn't exist
-2. A file watcher will be started to rebuild Tailwind CSS when you make changes
-3. The built CSS file will be copied to the dummy application
+The implementation can be found in the application layout file:
 
-This means you don't need any special commands - just run the Rails server as usual!
-
-If you want to manually rebuild the Tailwind CSS:
-
-```bash
-bin/rails webring:tailwind:build
+```erb
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/forms@0.5.7/dist/cdn.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {}
+    },
+    plugins: [
+      tailwindForms
+    ]
+  }
+</script>
 ```
 
 ### Testing

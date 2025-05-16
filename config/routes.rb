@@ -1,10 +1,5 @@
 Webring::Engine.routes.draw do
-  resources :members do
-    member do
-      patch :approve
-      patch :reject
-    end
-  end
+  resources :members
 
   get 'next', to: 'navigation#next'
   get 'previous', to: 'navigation#previous'

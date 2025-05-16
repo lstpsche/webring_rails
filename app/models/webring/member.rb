@@ -1,13 +1,5 @@
 module Webring
   class Member < ApplicationRecord
-    STATUSES = {
-      pending: 0,
-      approved: 1,
-      rejected: 2
-    }.freeze
-
-    enum :status, STATUSES, default: :pending, validate: true
-
     validates :url, presence: true, uniqueness: true
     validates :name, uniqueness: true, if: -> { name.present? }
 

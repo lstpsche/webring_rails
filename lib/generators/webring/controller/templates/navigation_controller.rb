@@ -2,20 +2,17 @@ module Webring
   class NavigationController < ApplicationController
     # GET /webring/next
     def next
-      # Add your navigation logic here
-      # Example: @next_member = Webring::Member.approved.where("id > ?", params[:current_id]).first
+      # TODO: add navigation logic here
     end
 
     # GET /webring/previous
     def previous
-      # Add your navigation logic here
-      # Example: @previous_member = Webring::Member.approved.where("id < ?", params[:current_id]).last
+      # TODO: add navigation logic here
     end
 
     # GET /webring/random
     def random
-      # Add your navigation logic here
-      # Example: @random_member = Webring::Member.approved.order("RANDOM()").first
+      # TODO: add navigation logic here
     end
   end
 end
