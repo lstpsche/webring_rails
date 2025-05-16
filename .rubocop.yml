@@ -7,6 +7,7 @@ AllCops:
     - bin/*
     - Gemfile.lock
     - lib/generators/webring/member/templates/migration.rb
+    - vendor/**/*
   NewCops: disable
   SuggestExtensions: false
   TargetRubyVersion: 3.2
