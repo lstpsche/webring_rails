@@ -39,13 +39,13 @@ gem 'webring_rails'
 
 Then execute:
 ```bash
-$ bundle install
+bundle install
 ```
 
 Run the installation generator:
 
 ```bash
-$ rails generate webring:install
+rails generate webring:install
 ```
 
 > [!TIP]
@@ -63,7 +63,7 @@ WebringRails provides several generators to help you set up webring functionalit
 #### Installation Generator
 
 ```bash
-$ rails generate webring:install
+rails generate webring:install
 ```
 
 This generator:
@@ -72,7 +72,7 @@ This generator:
 #### Member Model Generator
 
 ```bash
-$ rails generate webring:member
+rails generate webring:member
 ```
 
 This generator:
@@ -83,7 +83,7 @@ This generator:
 #### Navigation Controller Generator
 
 ```bash
-$ rails generate webring:controller
+rails generate webring:controller
 ```
 
 This generator:
