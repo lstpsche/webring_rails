@@ -1,4 +1,4 @@
-# WebringRails
+# Webring for Rails
 
 A Rails engine for creating and managing a webring.
 
@@ -354,6 +354,59 @@ The implementation can be found in the application layout file:
 
 > [!WARNING]
 > As of now, there are no tests. Contributions to add test coverage are welcome!
+
+## Widget Implementation
+
+> [!TIP]
+> The widget is a key feature that allows members to display webring navigation on their websites.
+
+### Adding a Widget to Member's Site
+
+Once a member is added to your webring, they need to include the widget on their site to enable navigation to other webring members. The widget is a JavaScript file that creates navigation links on the member's website.
+
+#### Basic Implementation
+
+To add the widget to a member's website, they need to:
+
+1. Add the widget script to their HTML page
+2. Include a container element with the specific ID
+
+```html
+<!-- Webring Widget -->
+<script src="https://your-app-domain.com/webring/widget.js" data-member-id="MEMBER_ID"></script>
+<div id="webring-widget"></div>
+<!-- End Webring Widget -->
+```
+
+Replace:
+- `your-app-domain.com` with your application's actual domain
+- `MEMBER_ID` with the numeric ID of the member in your webring
+
+#### How the Widget Works
+
+When added to a member's site, the widget:
+1. Creates a small UI element with "Previous", "Random", and "Next" navigation links
+2. The links point back to your webring hub application, passing the member's ID
+3. When a visitor clicks a navigation link, they are redirected to another member's site
+4. The navigation preserves the ring structure, allowing visitors to traverse through the entire webring
+
+#### Widget Placement
+
+Members should place the widget code in a visible area of their site, such as:
+- The site footer
+- A sidebar
+- The about page
+- Any area where they want to promote their webring membership
+
+#### Customization Options
+
+The default widget styling is minimal and should work with most websites. Members who want to customize the appearance can add their own CSS styles by targeting the `.webring-nav` CSS class.
+
+#### Administration
+
+From the webring administration interface, you can:
+- View a preview of how the widget will look on a member's site
+- Provide members with their personalized widget code when they're approved to join
 
 ## License
 

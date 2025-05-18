@@ -1,8 +1,8 @@
-<div class='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+<div class='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6'>
   <div class='py-6'>
     <div class='flex items-center'>
       <% if back_path.present? %>
-        <%= link_to back_path, class: 'mr-2 text-indigo-600 hover:text-indigo-900' do %>
+        <%= button_to back_path, method: :get, class: 'mr-2 inline-flex items-center px-2 py-2 rounded-md text-gray-700 hover:bg-gray-100 focus:bg-gray-200' do %>
           <svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' viewBox='0 0 20 20' fill='currentColor'>
             <path fill-rule='evenodd' d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z' clip-rule='evenodd' />
           </svg>

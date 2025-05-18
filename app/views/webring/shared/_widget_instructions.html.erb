@@ -1,0 +1,21 @@
+<div class='widget-instructions'>
+  <h3>Add the Webring Widget to Member's Site</h3>
+  <p>Copy and paste the following code into member's site HTML where you want the widget to appear:</p>
+
+  <pre><code>&lt;!-- Webring Widget --&gt;
+&lt;script src='<%= webring.widget_url(format: 'js') %>' data-member-id='<%= member.id %>'&gt;&lt;/script&gt;
+&lt;div id='webring-widget'&gt;&lt;/div&gt;
+&lt;!-- End Webring Widget --&gt;</code></pre>
+
+  <div class='mt-4 mb-4'>
+    <h4 class='text-lg font-medium text-gray-900 mb-2'>Preview</h4>
+    <div class='border border-gray-200 p-6 rounded-md bg-gray-50'>
+      <div id="webring-widget"></div>
+    </div>
+  </div>
+
+  <p class='mt-4'>The widget will display navigation links to move through the webring.</p>
+</div>
+
+<%# Include the widget script for preview purposes %>
+<script src='<%= webring.widget_url(format: 'js') %>' data-member-id='<%= member.id %>'></script>
