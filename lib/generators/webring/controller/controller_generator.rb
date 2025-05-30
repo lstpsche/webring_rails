@@ -1,6 +1,10 @@
+require_relative '../shared/route_injector'
+
 module Webring
   module Generators
     class ControllerGenerator < Rails::Generators::Base
+      include Shared::RouteInjector
+
       source_root File.expand_path('templates', __dir__)
 
       desc 'Creates a Webring::NavigationController and necessary routes'
@@ -21,17 +25,7 @@ module Webring
           end
         ROUTE
 
-        cleared_route_content = route_content.gsub(/^/, '  ')
-        routes_file = 'config/routes.rb'
-        mount_point = "mount Webring::Engine => '/webring', as: 'webring'\n"
-
-        if File.read(routes_file).include?(mount_point)
-          inject_into_file routes_file, after: mount_point do
-            "\n#{cleared_route_content}\n"
-          end
-        else
-          route "#{cleared_route_content}\n"
-        end
+        inject_webring_routes(route_content)
       end
     end
   end

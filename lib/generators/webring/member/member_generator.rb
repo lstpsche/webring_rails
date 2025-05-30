@@ -1,10 +1,12 @@
 require 'rails/generators/active_record'
 require 'rails/generators/named_base'
+require_relative '../shared/route_injector'
 
 module Webring
   module Generators
     class MemberGenerator < Rails::Generators::Base
       include Rails::Generators::Migration
+      include Shared::RouteInjector
 
       source_root File.expand_path('templates', __dir__)
 
@@ -26,17 +28,7 @@ module Webring
           end
         ROUTE
 
-        cleared_route_content = route_content.gsub(/^/, '  ')
-        routes_file = 'config/routes.rb'
-        mount_point = "mount Webring::Engine => '/webring', as: 'webring'\n"
-
-        if File.read(routes_file).include?(mount_point)
-          inject_into_file routes_file, after: mount_point do
-            "\n#{cleared_route_content}"
-          end
-        else
-          route "#{cleared_route_content}\n"
-        end
+        inject_webring_routes(route_content)
       end
 
       # required by Rails::Generators::Migration

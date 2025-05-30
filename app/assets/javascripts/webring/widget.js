@@ -2,7 +2,7 @@
  * Webring Navigation Widget
  *
  * Usage:
- * <script src="https://yourhub.com/webring/widget.js" data-member-id="YOUR_MEMBER_ID"></script>
+ * <script src="https://yourhub.com/webring/widget.js" data-member-uid="YOUR_MEMBER_UID"></script>
  * <div id="webring-widget"></div>
  */
 
@@ -13,11 +13,11 @@
     return scripts[scripts.length - 1];
   })();
 
-  // Extract member ID from the data attribute
-  const memberId = scriptTag.getAttribute('data-member-id');
+  // Extract member UID from the data attribute
+  const memberUid = scriptTag.getAttribute('data-member-uid');
 
-  if (!memberId) {
-    console.error('Webring Widget: Missing data-member-id attribute on script tag.');
+  if (!memberUid) {
+    console.error('Webring Widget: Missing data-member-uid attribute on script tag.');
     return;
   }
 
@@ -39,9 +39,9 @@
       <div class="webring-nav">
         <span class="webring-title">Webring</span>
         <nav>
-          <a href="${rootUrl}/webring/previous?source_member_id=${memberId}" title="Previous site">«</a>
-          <a href="${rootUrl}/webring/random?source_member_id=${memberId}" title="Random site">Random</a>
-          <a href="${rootUrl}/webring/next?source_member_id=${memberId}" title="Next site">»</a>
+          <a href="${rootUrl}/webring/previous?source_member_uid=${memberUid}" title="Previous site">«</a>
+          <a href="${rootUrl}/webring/random?source_member_uid=${memberUid}" title="Random site">Random</a>
+          <a href="${rootUrl}/webring/next?source_member_uid=${memberUid}" title="Next site">»</a>
         </nav>
       </div>
     `;

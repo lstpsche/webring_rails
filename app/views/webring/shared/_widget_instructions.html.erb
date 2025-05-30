@@ -3,7 +3,7 @@
   <p>Copy and paste the following code into member's site HTML where you want the widget to appear:</p>
 
   <pre><code>&lt;!-- Webring Widget --&gt;
-&lt;script src='<%= webring.widget_url(format: 'js') %>' data-member-id='<%= member.id %>'&gt;&lt;/script&gt;
+&lt;script src='<%= webring.widget_url(format: 'js') %>' data-member-uid='<%= member.uid %>'&gt;&lt;/script&gt;
 &lt;div id='webring-widget'&gt;&lt;/div&gt;
 &lt;!-- End Webring Widget --&gt;</code></pre>
 
@@ -18,4 +18,4 @@
 </div>
 
 <%# Include the widget script for preview purposes %>
-<script src='<%= webring.widget_url(format: 'js') %>' data-member-id='<%= member.id %>'></script>
+<script src='<%= webring.widget_url(format: 'js') %>' data-member-uid='<%= member.uid %>'></script>

@@ -4,7 +4,7 @@ module Webring
 
     # GET /webring/members
     def index
-      @members = Member.all.order(id: :desc)
+      @members = Member.all.order(created_at: :desc)
     end
 
     # GET /webring/members/1
@@ -49,7 +49,7 @@ module Webring
 
     # Use callbacks to share common setup or constraints between actions.
     def set_member
-      @member = Member.find(params[:id])
+      @member = Member.find_by!(uid: params[:id])
     end
 
     # Only allow a list of trusted parameters through.
