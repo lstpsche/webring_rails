@@ -327,33 +327,55 @@ You don't need to copy migrations to the dummy app, it looks for them in the eng
 
 ### Tailwind CSS Integration
 
-This gem includes Tailwind CSS via CDN for simplicity and ease of use. There's no build process required - the CDN automatically handles:
+This gem integrates with Tailwind CSS using the `tailwindcss-rails` gem for optimal performance and development experience. The setup includes:
 
-1. Loading the latest version of Tailwind CSS
-2. Just-in-time compilation of styles
-3. The Tailwind Forms plugin for enhanced form styling
+#### Gem Dependencies
 
-The CDN approach provides several benefits:
-- No build pipeline required
-- Smaller bundle size for development
-- Quick prototyping and development experience
+The gem includes `tailwindcss-rails` as a dependency, which provides:
+- Built-in Tailwind CSS compilation
+- Watch mode for development
+- Optimized builds for production
+- Automatic purging of unused styles
 
-The implementation can be found in the application layout file:
+#### Configuration
 
-```erb
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/forms@0.5.7/dist/cdn.min.js"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {}
-    },
-    plugins: [
-      tailwindForms
-    ]
-  }
-</script>
+The Tailwind configuration is defined in `engines/webring_rails/config/tailwind.config.js`:
+
+```javascript
+module.exports = {
+  content: [
+    './app/views/**/*.html.erb',
+    './app/helpers/**/*.rb',
+    './app/assets/stylesheets/**/*.css',
+    './app/javascript/**/*.js'
+  ]
+}
 ```
+
+This configuration ensures that Tailwind scans all relevant files in the engine for class usage and only includes the CSS for classes that are actually used.
+
+#### Stylesheet Setup
+
+The main stylesheet at `app/assets/stylesheets/webring/application.css` uses Tailwind directives:
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+#### Integration with Host Application
+
+When using this gem in your Rails application, the Tailwind styles are automatically included when you include the engine's stylesheets. The compilation happens independently of the host application's asset pipeline, ensuring no conflicts.
+
+For host applications that also use Tailwind CSS, both stylesheets can coexist without issues, as each maintains its own compilation process.
+
+#### Benefits of This Approach
+
+- **Performance**: Only includes CSS for classes actually used in the engine
+- **Isolation**: No conflicts with host application's styling
+- **Development Experience**: Automatic recompilation during development
+- **Production Ready**: Optimized builds with proper purging
 
 ### Testing
 

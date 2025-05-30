@@ -5,7 +5,7 @@ Gem::Specification.new do |spec|
 
   spec.name        = 'webring_rails'
   spec.version     = Webring::VERSION
-  spec.authors     = ['Nikita Silivonchik']
+  spec.authors     = ['Nikita Shkoda (Silivonchik)']
   spec.email       = ['lstpsche@gmail.com']
   spec.homepage    = 'https://github.com/lstpsche/webring_rails'
   spec.summary     = 'WebRing plugin for Rails'
@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'propshaft', '>= 0.9', '< 2.0'
   spec.add_dependency 'rails', '>= 7.0'
+  spec.add_dependency 'tailwindcss-rails', '>= 2.0'
 
   spec.add_development_dependency 'rubocop', '~> 1.75'
   spec.add_development_dependency 'rubocop-rails', '~> 2.31'

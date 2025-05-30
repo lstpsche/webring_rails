@@ -6,21 +6,12 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
-  <%= yield :head %>
+  <%= stylesheet_link_tag "webring/application", "data-turbo-track": "reload" %>
 
-  <script src='https://cdn.tailwindcss.com'></script>
-  <script src='https://cdn.jsdelivr.net/npm/@tailwindcss/forms@0.5.7/dist/cdn.min.js'></script>
-  <script>
-    tailwind.config = {
-      theme: { extend: {} }
-    }
-  </script>
-  <script defer src='https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js'></script>
+  <%= yield :head %>
 </head>
 <body class='h-full'>
   <div class='min-h-full'>
-    <%= render 'webring/shared/navbar' %>
-
     <main>
       <%= yield %>
     </main>
