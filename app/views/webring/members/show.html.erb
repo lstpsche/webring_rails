@@ -10,10 +10,10 @@
         <p class='mt-1 max-w-2xl text-sm text-gray-500'>Details and status of the member.</p>
       </div>
       <div class='flex space-x-2'>
-        <%= link_to 'Edit', edit_member_path(@member), class: 'inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500' %>
+        <%= button_to 'Edit', edit_member_path(@member), method: :get, class: 'inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:bg-gray-200' %>
         <%= button_to 'Delete', member_path(@member), method: :delete,
             form: { data: { turbo_confirm: 'Are you sure?' } },
-            class: 'inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500' %>
+            class: 'inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-600 bg-red-50 hover:text-red-700 hover:bg-red-100 focus:bg-red-200 focus:outline-none' %>
       </div>
     </div>
     <div class='border-t border-gray-200'>
@@ -29,10 +29,14 @@
           </dd>
         </div>
         <div class='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
+          <dt class='text-sm font-medium text-gray-500'>Unique ID</dt>
+          <dd class='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 font-mono'><%= @member.uid %></dd>
+        </div>
+        <div class='bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
           <dt class='text-sm font-medium text-gray-500'>Created at</dt>
           <dd class='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'><%= @member.created_at.strftime('%B %d, %Y %H:%M') %></dd>
         </div>
-        <div class='bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
+        <div class='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
           <dt class='text-sm font-medium text-gray-500'>Updated at</dt>
           <dd class='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'><%= @member.updated_at.strftime('%B %d, %Y %H:%M') %></dd>
         </div>
@@ -40,9 +44,19 @@
     </div>
   </div>
 
+  <div class='mt-8 bg-white shadow overflow-hidden sm:rounded-lg'>
+    <div class='px-4 py-5 sm:px-6'>
+      <h3 class='text-lg leading-6 font-medium text-gray-900'>Webring Widget</h3>
+      <p class='mt-1 max-w-2xl text-sm text-gray-500'>Instructions to add the webring navigation to member's site.</p>
+    </div>
+    <div class='border-t border-gray-200 px-4 py-5 sm:px-6'>
+      <%= render 'webring/shared/widget_instructions', member: @member %>
+    </div>
+  </div>
+
   <div class='mt-6'>
     <div>
-      <%= link_to 'Back to Members', members_path, class: 'text-indigo-600 hover:text-indigo-900' %>
+      <%= link_to 'Back to Members', members_path, class: 'inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:bg-gray-200' %>
     </div>
   </div>
 <% end %>
