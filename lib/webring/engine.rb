@@ -32,7 +32,7 @@ module Webring
     end
 
     # configure tailwind css for the engine
-    initializer 'webring.tailwind' do |app|
+    initializer 'webring.tailwind' do |_app|
       if defined?(Tailwindcss::Rails)
         config.tailwindcss.config_path = root.join('config', 'tailwind.config.js')
         config.tailwindcss.input_path = root.join('app', 'assets', 'stylesheets', 'webring', 'application.css')
