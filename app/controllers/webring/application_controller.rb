@@ -1,5 +1,5 @@
 module Webring
   class ApplicationController < ActionController::Base
-    layout 'application'
+    layout 'webring/application'
   end
 end
