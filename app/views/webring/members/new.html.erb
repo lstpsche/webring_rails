@@ -3,62 +3,83 @@
   description: 'Create a new member for the webring.',
   back_path: members_path
 } do %>
-  <div class='bg-white shadow overflow-hidden sm:rounded-lg'>
-    <div class='px-4 py-5 sm:p-6'>
-      <%= form_with(model: @member, class: 'space-y-6') do |form| %>
-        <% if @member.errors.any? %>
-          <div class='rounded-md bg-red-50 p-4' x-data='{ show: true }' x-show='show'>
-            <div class='flex'>
-              <div class='flex-shrink-0'>
-                <svg class='h-5 w-5 text-red-400' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor' aria-hidden='true'>
-                  <path fill-rule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z' clip-rule='evenodd' />
-                </svg>
-              </div>
-              <div class='ml-3'>
-                <h3 class='text-sm font-medium text-red-800'>
-                  There were <%= pluralize(@member.errors.count, 'error') %> with your submission
-                </h3>
-                <div class='mt-2 text-sm text-red-700'>
-                  <ul class='list-disc pl-5 space-y-1'>
-                    <% @member.errors.full_messages.each do |message| %>
-                      <li><%= message %></li>
-                    <% end %>
-                  </ul>
-                </div>
-              </div>
-              <div class='ml-auto pl-3'>
-                <div class='-mx-1.5 -my-1.5'>
-                  <button @click='show = false' type='button' class='inline-flex bg-red-50 rounded-md p-1.5 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'>
-                    <span class='sr-only'>Dismiss</span>
-                    <svg class='h-5 w-5' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor' aria-hidden='true'>
-                      <path fill-rule='evenodd' d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z' clip-rule='evenodd' />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        <% end %>
+  <div class="flex justify-center">
+    <div class="w-full max-w-4xl">
+      <%= form_with(model: @member,
+                   html: {
+                     "x-data": %Q({
+                       loading: false,
+                       hasError: #{@member.errors.any? ? 'true' : 'false'},
+                       errorMessages: #{@member.errors.full_messages.to_json.html_safe},
 
-        <div>
-          <%= form.label :name, class: 'block text-sm font-medium text-gray-700' %>
-          <div class='mt-1'>
-            <%= form.text_field :name, class: 'shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md', placeholder: 'Member Name' %>
-          </div>
-          <p class='mt-1 text-sm text-gray-500'>The name of the member. If left blank, URL will be used.</p>
+                       clearError() {
+                         this.hasError = false;
+                         this.errorMessages = [];
+                       },
+
+                       get buttonText() {
+                         return this.loading ? 'Creating...' : (this.hasError ? 'Fix errors above' : 'Create Member');
+                       },
+
+                       get buttonClasses() {
+                         if (this.hasError) return 'btn btn-error';
+                         if (this.loading) return 'btn btn-loading';
+                         return 'btn btn-primary';
+                       },
+
+                       handleSubmit() {
+                         if (!this.hasError) this.loading = true;
+                       }
+                     }),
+                     "x-on:submit": "handleSubmit()",
+                     "x-on:input": "if (hasError) clearError()"
+                   }) do |form| %>
+
+        <div x-show="hasError"
+             x-cloak
+             class="border border-red-600 border-[3px] bg-red-50 p-4 mb-6">
+          <h3 class="font-semibold text-red-800 mb-2">Please fix the following errors:</h3>
+          <ul class="text-sm text-red-700 space-y-1">
+            <template x-for="error in errorMessages" :key="error">
+              <li x-text="'• ' + error"></li>
+            </template>
+          </ul>
+        </div>
+
+        <div class="field mb-4">
+          <%= form.label :name, class: "form-label" %>
+          <%= form.text_field :name,
+              class: "form-input",
+              placeholder: "Member Name (optional)" %>
+          <p class="text-sm text-gray-500 mt-1">If left blank, the URL will be used as the name.</p>
+        </div>
+
+        <div class="field mb-4">
+          <%= form.label :url, class: "form-label" %>
+          <%= form.text_field :url,
+              class: "form-input",
+              placeholder: "https://example.com",
+              required: true %>
+          <p class="text-sm text-gray-500 mt-1">The full URL of the member's website.</p>
         </div>
 
         <div>
-          <%= form.label :url, class: 'block text-sm font-medium text-gray-700' %>
-          <div class='mt-1'>
-            <%= form.text_field :url, class: 'shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md', placeholder: 'https://example.com', required: true %>
-          </div>
-          <p class='mt-1 text-sm text-gray-500'>The URL of the member's website.</p>
+          <%= form.submit "",
+              "x-bind:class": "buttonClasses",
+              "x-bind:disabled": "loading || hasError",
+              "x-bind:value": "buttonText" %>
         </div>
 
-        <div class='flex justify-end'>
-          <%= button_to 'Cancel', members_path, method: :get, class: 'mr-3 inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:bg-gray-200' %>
-          <%= form.submit 'Create Member', class: 'inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:bg-indigo-800 cursor-pointer' %>
+        <div x-show="loading"
+             x-cloak
+             class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-10 pointer-events-none">
+          <div class="bg-black text-white px-4 py-2 border-[3px] border-black flex items-center">
+            <svg class="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Creating member...
+          </div>
         </div>
       <% end %>
     </div>

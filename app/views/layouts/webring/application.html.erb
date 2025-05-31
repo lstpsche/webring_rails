@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html class='h-full bg-gray-50'>
+<html class="h-full bg-gray-50">
 <head>
-  <title>Webring</title>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title><%= content_for(:title) || "Webring" %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
 
@@ -10,9 +12,9 @@
 
   <%= yield :head %>
 </head>
-<body class='h-full'>
-  <div class='min-h-full'>
-    <main>
+<body class="h-full text-gray-900 bg-gray-50">
+  <div class="min-h-full">
+    <main class="w-full">
       <%= yield %>
     </main>
   </div>

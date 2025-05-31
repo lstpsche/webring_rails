@@ -3,60 +3,68 @@
   description: "Viewing details for #{@member.name}",
   back_path: members_path
 } do %>
-  <div class='bg-white shadow overflow-hidden sm:rounded-lg'>
-    <div class='px-4 py-5 sm:px-6 flex justify-between'>
-      <div>
-        <h3 class='text-lg leading-6 font-medium text-gray-900'>Member Information</h3>
-        <p class='mt-1 max-w-2xl text-sm text-gray-500'>Details and status of the member.</p>
-      </div>
-      <div class='flex space-x-2'>
-        <%= button_to 'Edit', edit_member_path(@member), method: :get, class: 'inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:bg-gray-200' %>
-        <%= button_to 'Delete', member_path(@member), method: :delete,
-            form: { data: { turbo_confirm: 'Are you sure?' } },
-            class: 'inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-600 bg-red-50 hover:text-red-700 hover:bg-red-100 focus:bg-red-200 focus:outline-none' %>
-      </div>
-    </div>
-    <div class='border-t border-gray-200'>
-      <dl>
-        <div class='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
-          <dt class='text-sm font-medium text-gray-500'>Name</dt>
-          <dd class='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'><%= @member.name %></dd>
+  <div class="flex min-h-screen items-start justify-center">
+    <div class="w-full max-w-4xl">
+      <div class="border border-black border-[3px] bg-white" x-data="{ loading: false }">
+        <div class="px-4 py-5 sm:px-6 flex justify-between">
+          <div>
+            <h3 class="text-lg leading-6 font-semibold text-black">Member Information</h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-600">Details and status of the member.</p>
+          </div>
+          <div class="flex space-x-2">
+            <%= link_to 'Edit', edit_member_path(@member),
+                class: 'btn btn-primary',
+                x_bind_disabled: 'loading',
+                x_bind_class: "loading ? 'btn btn-loading' : 'btn btn-primary'",
+                x_on_click: 'loading = true' %>
+            <%= button_to 'Delete', member_path(@member),
+                method: :delete,
+                form: {
+                  data: { turbo_confirm: 'Are you sure?' },
+                  x_on_submit: 'loading = true'
+                },
+                class: 'btn btn-error',
+                x_bind_disabled: 'loading' %>
+          </div>
         </div>
-        <div class='bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
-          <dt class='text-sm font-medium text-gray-500'>URL</dt>
-          <dd class='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
-            <%= link_to @member.url, @member.url, target: '_blank', class: 'text-indigo-600 hover:text-indigo-900' %>
-          </dd>
-        </div>
-        <div class='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
-          <dt class='text-sm font-medium text-gray-500'>Unique ID</dt>
-          <dd class='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 font-mono'><%= @member.uid %></dd>
-        </div>
-        <div class='bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
-          <dt class='text-sm font-medium text-gray-500'>Created at</dt>
-          <dd class='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'><%= @member.created_at.strftime('%B %d, %Y %H:%M') %></dd>
-        </div>
-        <div class='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
-          <dt class='text-sm font-medium text-gray-500'>Updated at</dt>
-          <dd class='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'><%= @member.updated_at.strftime('%B %d, %Y %H:%M') %></dd>
-        </div>
-      </dl>
-    </div>
-  </div>
 
-  <div class='mt-8 bg-white shadow overflow-hidden sm:rounded-lg'>
-    <div class='px-4 py-5 sm:px-6'>
-      <h3 class='text-lg leading-6 font-medium text-gray-900'>Webring Widget</h3>
-      <p class='mt-1 max-w-2xl text-sm text-gray-500'>Instructions to add the webring navigation to member's site.</p>
-    </div>
-    <div class='border-t border-gray-200 px-4 py-5 sm:px-6'>
-      <%= render 'webring/shared/widget_instructions', member: @member %>
-    </div>
-  </div>
+        <div class="border-t border-black">
+          <dl>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt class="text-sm font-semibold text-black">Name</dt>
+              <dd class="mt-1 text-sm text-black sm:mt-0 sm:col-span-2 font-medium"><%= @member.name %></dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt class="text-sm font-semibold text-black">URL</dt>
+              <dd class="mt-1 text-sm text-black sm:mt-0 sm:col-span-2">
+                <%= link_to @member.url, @member.url, target: '_blank', class: 'text-black hover:text-gray-600 transition-colors font-medium underline' %>
+              </dd>
+            </div>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt class="text-sm font-semibold text-black">Unique ID</dt>
+              <dd class="mt-1 text-sm text-black sm:mt-0 sm:col-span-2 font-mono bg-white px-2 py-1 border border-gray-300"><%= @member.uid %></dd>
+            </div>
+            <div class="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt class="text-sm font-semibold text-black">Created at</dt>
+              <dd class="mt-1 text-sm text-black sm:mt-0 sm:col-span-2 font-medium"><%= @member.created_at.strftime('%B %d, %Y %H:%M') %></dd>
+            </div>
+            <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt class="text-sm font-semibold text-black">Updated at</dt>
+              <dd class="mt-1 text-sm text-black sm:mt-0 sm:col-span-2 font-medium"><%= @member.updated_at.strftime('%B %d, %Y %H:%M') %></dd>
+            </div>
+          </dl>
+        </div>
+      </div>
 
-  <div class='mt-6'>
-    <div>
-      <%= link_to 'Back to Members', members_path, class: 'inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:bg-gray-200' %>
+      <div class="mt-8 border border-black border-[3px] bg-white">
+        <div class="px-4 py-5 sm:px-6">
+          <h3 class="text-lg leading-6 font-semibold text-black">Webring Widget</h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-600">Instructions to add the webring navigation to member's site.</p>
+        </div>
+        <div class="px-4 py-5 sm:px-6 bg-gray-50">
+          <%= render 'webring/shared/widget_instructions', member: @member %>
+        </div>
+      </div>
     </div>
   </div>
 <% end %>
