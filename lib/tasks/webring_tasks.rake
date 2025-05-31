@@ -1,6 +1,6 @@
 namespace :webring do
   desc 'Build Tailwind CSS for webring engine'
-  task :build_css do
+  task build_css: :environment do
     engine_root = File.expand_path('../..', __dir__)
     config_path = File.join(engine_root, 'config', 'tailwind.config.js')
     input_path = File.join(engine_root, 'app', 'assets', 'stylesheets', 'webring', 'application.css')
@@ -14,7 +14,7 @@ namespace :webring do
   end
 
   desc 'Watch and rebuild Tailwind CSS for webring engine'
-  task :watch_css do
+  task watch_css: :environment do
     engine_root = File.expand_path('../..', __dir__)
     config_path = File.join(engine_root, 'config', 'tailwind.config.js')
     input_path = File.join(engine_root, 'app', 'assets', 'stylesheets', 'webring', 'application.css')
