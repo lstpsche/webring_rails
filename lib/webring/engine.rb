@@ -23,22 +23,6 @@ module Webring
       end
     end
 
-    # configure asset precompilation
-    initializer 'webring.assets' do |app|
-      app.config.assets.precompile += %w[webring/application.css webring_manifest.js webring/widget.js]
-      app.config.assets.paths << root.join('app', 'assets', 'builds')
-      app.config.assets.paths << root.join('app', 'assets', 'javascripts')
-      app.config.assets.paths << root.join('app', 'assets', 'stylesheets')
-    end
-
-    # configure tailwind css for the engine
-    initializer 'webring.tailwind' do |_app|
-      if defined?(Tailwindcss::Rails)
-        config.tailwindcss.config_path = root.join('config', 'tailwind.config.js')
-        config.tailwindcss.input_path = root.join('app', 'assets', 'stylesheets', 'webring', 'application.css')
-      end
-    end
-
     # add migrations from the engine to the main app
     initializer 'webring.append_migrations' do |app|
       unless app.root.to_s == root.to_s

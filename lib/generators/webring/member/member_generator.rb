@@ -20,17 +20,6 @@ module Webring
         template 'model.rb', 'app/models/webring/member.rb'
       end
 
-      def create_routes
-        route_content = <<~ROUTE
-          # Webring member routes
-          namespace :webring do
-            resources :members
-          end
-        ROUTE
-
-        inject_webring_routes(route_content)
-      end
-
       # required by Rails::Generators::Migration
       def self.next_migration_number(dirname)
         next_migration_number = current_migration_number(dirname) + 1
