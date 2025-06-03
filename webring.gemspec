@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_dependency 'propshaft', '>= 0.9', '< 2.0'
+  spec.add_dependency 'rack-cors', '>= 3.0.0'
   spec.add_dependency 'rails', '>= 7.0'
   spec.add_dependency 'tailwindcss-rails', '>= 2.0'
 

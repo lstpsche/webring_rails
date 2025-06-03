@@ -3,6 +3,7 @@ PATH
   specs:
     webring_rails (0.3.0)
       propshaft (>= 0.9, < 2.0)
+      rack-cors (>= 3.0.0)
       rails (>= 7.0)
       tailwindcss-rails (>= 2.0)
 
@@ -159,6 +160,9 @@ GEM
       stringio
     racc (1.8.1)
     rack (3.1.15)
+    rack-cors (3.0.0)
+      logger
+      rack (>= 3.0.14)
     rack-session (2.1.1)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
