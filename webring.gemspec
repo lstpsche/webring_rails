@@ -3,7 +3,7 @@ require_relative 'lib/webring/version'
 Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 3.2.3'
 
-  spec.name        = 'webring_rails'
+  spec.name        = 'webring-rails'
   spec.version     = Webring::VERSION
   spec.authors     = ['Nikita Shkoda']
   spec.email       = ['lstpsche@gmail.com']
@@ -13,14 +13,13 @@ Gem::Specification.new do |spec|
   spec.license     = 'MIT'
 
   spec.metadata['homepage_uri'] = spec.homepage
-  spec.metadata['source_code_uri'] = 'https://github.com/lstpsche/webring_rails'
   # spec.metadata['changelog_uri'] = "TODO: Put your gem's CHANGELOG.md URL here."
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
     Dir['{app,config,lib}/**/*', 'MIT-LICENSE', 'README.md']
   end
 
-  spec.add_dependency 'rails', '>= 7.0'
+  spec.add_dependency 'rails', '~> 7.0'
 
   spec.add_development_dependency 'rubocop', '~> 1.75'
   spec.add_development_dependency 'rubocop-rails', '~> 2.31'
