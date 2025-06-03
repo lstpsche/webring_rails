@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
     Dir['{app,config,lib}/**/*', 'MIT-LICENSE', 'README.md']
   end
 
-  spec.add_dependency 'rails', '~> 7.0'
+  spec.add_dependency 'rails', '~> 8.0'
 
   spec.add_development_dependency 'rubocop', '~> 1.75'
   spec.add_development_dependency 'rubocop-rails', '~> 2.31'
