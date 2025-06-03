@@ -1,28 +1,63 @@
-Webring has been installed successfully! Next steps:
+==============================================
+Webring Engine Has Been Successfully Installed!
+==============================================
 
-1. Configure Your Models
-------------------------
-Generate a member model:
-    rails generate webring:member
+The Webring engine has been mounted at '/webring' in your application. Below are
+the next steps to complete the webring setup and customization options.
 
-This will create a Webring::Member model, migration, and add members routes to your routes.rb file.
-You can remove added routes (they will still work), or you can wrap them in some access control.
+1. Configure Your Members Model
+-------------------------------
+Generate a member model to store information about sites in your webring:
 
-2. Generate Navigation Controller [optional customization]
-----------------------------------------------------------
-Generate a navigation controller:
-    rails generate webring:controller
+    $ rails generate webring:member
 
-This will create the Webring::NavigationController and add its routes to your routes.rb file.
+This will:
+  - Create a Webring::Member model in app/models/webring/member.rb
+  - Create a migration to set up the webring_members table
+  - Add appropriate database indexes
 
-3. Update Your Routes [optional customization]
-----------------------------------------------
-The engine is mounted at /webring. You can change this in your routes.rb file.
+After generating the model, run the migration:
 
-4. Add UI Elements
-------------------
-Add navigation links to your views to navigate through the webring:
+    $ rails db:migrate
 
-<%= link_to 'Next', webring.next_path %>
-<%= link_to 'Previous', webring.previous_path %>
-<%= link_to 'Random', webring.random_path %>
+2. Generate Navigation Controller [Optional]
+--------------------------------------------
+Generate a navigation controller to handle navigation between webring members:
+
+    $ rails generate webring:controller
+
+This will:
+  - Create the Webring::NavigationController in app/controllers/webring/navigation_controller.rb
+  - Add navigation routes to your routes.rb file:
+    - GET /webring/next     - Navigate to the next site
+    - GET /webring/previous - Navigate to the previous site
+    - GET /webring/random   - Navigate to a random site
+
+3. Customize Your Routes [Optional]
+----------------------------------
+The engine is mounted at '/webring' by default. You can change this in your routes.rb file:
+
+    # Original mount point
+    mount Webring::Engine => '/webring', as: 'webring'
+
+    # Example custom mount point
+    mount Webring::Engine => '/network', as: 'webring'
+
+4. Add Webring Navigation UI Elements
+------------------------------------
+Add navigation links to your views to enable users to navigate through the webring:
+
+    <%= link_to 'Next Site', webring.next_path(source_member_uid: your_member.uid) %>
+    <%= link_to 'Previous Site', webring.previous_path(source_member_uid: your_member.uid) %>
+    <%= link_to 'Random Site', webring.random_path %>
+
+Note: Replace 'your_member.uid' with the actual UID of your site in the webring.
+      If you're building a standalone webring hub, you can omit the source_member_uid parameter.
+
+5. Managing Webring Members
+--------------------------
+You can add members to your webring using the Webring::Member model:
+
+    Webring::Member.create(name: 'Example Site', url: 'https://example.com')
+
+Consider building an admin interface to manage your webring members.
