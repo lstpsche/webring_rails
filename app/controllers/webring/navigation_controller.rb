@@ -2,7 +2,6 @@ module Webring
   class NavigationController < ApplicationController
     before_action :find_member, only: %i[next previous]
     before_action :ensure_members_exist, :check_member_exists, only: [:random]
-    before_action :set_cors_headers
 
     # GET /webring/next
     def next
