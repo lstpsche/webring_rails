@@ -1,7 +1,38 @@
-Webring::Member has been installed successfully! Next steps:
+==============================================
+Webring::Member Model Has Been Generated!
+==============================================
 
-1. Run migration:
-   rails db:migrate
+The Member model is the core component of the webring, representing each site
+in your webring network. Follow these steps to complete the setup:
 
-2. Take a look at the generated model:
-   app/models/webring/member.rb
+1. Run Database Migration
+------------------------
+Apply the migration to create the webring_members table:
+
+    $ rails db:migrate
+
+2. Review and Customize the Model
+-------------------------------
+The generated model is located at:
+    app/models/webring/member.rb
+
+The Member model has the following attributes:
+  - uid: A unique identifier automatically generated for each member (32-character hex)
+  - name: The name of the member site (optional, defaults to URL if not provided)
+  - url: The URL of the member site (required)
+
+3. Adding Members to Your Webring
+-------------------------------
+You can add members to your webring using the Webring::Member model:
+
+    Webring::Member.create(name: 'Example Site', url: 'https://example.com')
+
+The uid will be automatically generated if not provided.
+
+4. Next Steps
+-----------
+Consider generating the navigation controller to enable navigation between webring members:
+
+    $ rails generate webring:controller
+
+This will create routes and controller actions for webring navigation.
