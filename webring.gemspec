@@ -5,11 +5,11 @@ Gem::Specification.new do |spec|
 
   spec.name        = 'webring_rails'
   spec.version     = Webring::VERSION
-  spec.authors     = ['Nikita Shkoda (Silivonchik)']
+  spec.authors     = ['Nikita Shkoda']
   spec.email       = ['lstpsche@gmail.com']
   spec.homepage    = 'https://github.com/lstpsche/webring_rails'
   spec.summary     = 'WebRing plugin for Rails'
-  spec.description = 'Mountable Rails Engine for webring implementation'
+  spec.description = 'Mountable Rails Engine for webring implementation with an embeddable styled widget'
   spec.license     = 'MIT'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -24,7 +24,6 @@ Gem::Specification.new do |spec|
     Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   end
 
-  spec.add_dependency 'propshaft', '>= 0.9', '< 2.0'
   spec.add_dependency 'rails', '>= 7.0'
 
   spec.add_development_dependency 'rubocop', '~> 1.75'
