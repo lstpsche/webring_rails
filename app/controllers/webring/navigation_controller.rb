@@ -2,6 +2,7 @@ module Webring
   class NavigationController < ApplicationController
     before_action :find_member, only: %i[next previous]
     before_action :ensure_members_exist, :check_member_exists, only: [:random]
+    before_action :set_cors_headers
 
     # GET /webring/next
     def next
@@ -56,6 +57,13 @@ module Webring
 
     def render_member_not_found
       render plain: 'Member not found', status: :not_found
+    end
+
+    def set_cors_headers
+      headers['Access-Control-Allow-Origin'] = '*'
+      headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+      headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept'
+      headers['Access-Control-Max-Age'] = '86400'
     end
   end
 end
