@@ -1,15 +1,25 @@
+![Webring Widget Sample](widget-sample.png)
+
 # Webring for Rails
 
-A Rails engine for creating and managing a webring.
+Webring for Rails (webring_rails) is a flexible engine for creating and managing a webring system in your Ruby on Rails application. A webring is a collection of websites linked together in a circular structure, allowing visitors to navigate from one site to another.
 
 ## Table of Contents
 
+- [Features](#features)
+- [Requirements](#requirements)
 - [Installation](#installation)
+  - [Quick Start](#quick-start)
+  - [Manual Setup](#manual-setup)
+  - [Configuration Options](#configuration-options)
+  - [Setting Up Your Host Application](#setting-up-your-host-application)
 - [Usage](#usage)
   - [Generators](#generators)
     - [Installation Generator](#installation-generator)
     - [Member Model Generator](#member-model-generator)
     - [Navigation Controller Generator](#navigation-controller-generator)
+  - [Basic Implementation](#basic-implementation)
+  - [Customizing Your Webring](#customizing-your-webring)
 - [Models](#models)
   - [Webring::Member](#webringmember)
 - [Modules](#modules)
@@ -24,12 +34,40 @@ A Rails engine for creating and managing a webring.
     - [How to Use the Navigation Controller](#how-to-use-the-navigation-controller)
     - [Customizing Navigation Behavior](#customizing-navigation-behavior-1)
   - [Webring::MembersController](#webringmemberscontroller)
+- [Widget](#widget)
+  - [Webring::WidgetController](#webringwidgetcontroller)
+  - [Widget.js](#widgetjs)
+    - [How to Use the Widget](#how-to-use-the-widget)
+    - [Widget Customization Options](#widget-customization-options)
+    - [Example With All Options](#example-with-all-options)
+    - [Multiple Widgets on the Same Page](#multiple-widgets-on-the-same-page)
 - [Development](#development)
   - [Migrations](#migrations)
-  - [Tailwind CSS Integration](#tailwind-css-integration)
   - [Testing](#testing)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Features
+
+Webring for Rails provides the following features:
+
+- Complete MVC structure for managing webring members
+- Circular navigation system between member websites
+- UID-based member identification for security
+- Embeddable JavaScript widget for easy member site integration
+- Customizable widget appearance and behavior
+- Generators for easy setup and customization
+- Extensible architecture for adding custom features
+
+## Requirements
+
+- Ruby 2.7.0 or later
+- Rails 6.0 or later
+- ActiveRecord-compatible database (MySQL, PostgreSQL, SQLite)
 
 ## Installation
+
+### Quick Start
 
 Add this line to your application's Gemfile:
 
@@ -37,19 +75,109 @@ Add this line to your application's Gemfile:
 gem 'webring_rails'
 ```
 
-Then execute:
+Run:
+
+```bash
+# Install the gem
+bundle install
+
+# Run the installation generator
+rails generate webring:install
+
+# Create the member model and migrations
+rails generate webring:member
+
+# Create the navigation controller
+rails generate webring:controller
+
+# Run migrations
+rails db:migrate
+```
+
+### Manual Setup
+
+If you prefer to set things up step by step:
+
+1. Add the gem to your Gemfile:
+
+```ruby
+gem 'webring_rails'
+```
+
+2. Install the gem:
+
 ```bash
 bundle install
 ```
 
-Run the installation generator:
+3. Mount the engine in your routes:
 
-```bash
-rails generate webring:install
+```ruby
+# config/routes.rb
+Rails.application.routes.draw do
+  mount Webring::Engine => "/webring"
+
+  # Your other routes...
+end
 ```
 
-> [!TIP]
-> The installation generator will automatically mount the engine in your routes.rb file, making it ready to use.
+4. Create necessary migrations:
+
+```bash
+rails generate migration CreateWebringMembers uid:string name:string url:string
+```
+
+5. Configure your migration:
+
+```ruby
+class CreateWebringMembers < ActiveRecord::Migration[6.0]
+  def change
+    create_table :webring_members do |t|
+      t.string :uid, null: false, index: { unique: true }
+      t.string :name, null: false, index: { unique: true }
+      t.string :url, null: false, index: { unique: true }
+
+      t.timestamps
+    end
+  end
+end
+```
+
+6. Run migrations:
+
+```bash
+rails db:migrate
+```
+
+### Configuration Options
+
+You can configure the webring engine by creating an initializer:
+
+```ruby
+# config/initializers/webring.rb
+Webring.setup do |config|
+  # Set the primary key type (uuid recommended for production)
+  config.primary_key_type = :uuid
+end
+```
+
+### Setting Up Your Host Application
+
+To properly integrate the webring in your host application:
+
+1. Set up default URL options for mailers in each environment:
+
+```ruby
+# config/environments/development.rb
+config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+```
+
+2. Add root route in your application:
+
+```ruby
+# config/routes.rb
+root to: 'home#index'
+```
 
 ## Usage
 
@@ -90,6 +218,41 @@ This generator:
 - Creates the Webring::NavigationController with '/next', '/previous', and '/random' actions
 - Adds navigation routes to your routes.rb file
 
+### Basic Implementation
+
+After setting up the gem, you'll need to add members to your webring:
+
+```ruby
+# Through the console or in a seed file
+Webring::Member.create(name: "My Awesome Site", url: "https://myawesomesite.com")
+Webring::Member.create(name: "Another Cool Site", url: "https://anothercoolsite.com")
+```
+
+### Customizing Your Webring
+
+You can customize various aspects of your webring:
+
+1. Create custom views:
+
+```bash
+rails generate webring:views
+```
+
+2. Create a custom navigation controller:
+
+```ruby
+# app/controllers/custom_navigation_controller.rb
+class CustomNavigationController < Webring::NavigationController
+  def next
+    # Your custom implementation
+    super
+  end
+end
+
+# config/routes.rb
+get 'webring/next', to: 'custom_navigation#next'
+```
+
 ## Models
 
 ### Webring::Member
@@ -106,6 +269,22 @@ The Member model includes:
   - `find_next(source_member_uid)` - Finds the next member after the given UID
   - `find_previous(source_member_uid)` - Finds the previous member before the given UID
   - `find_random(source_member_uid: nil)` - Finds a random member, excluding the source member
+
+#### Example Usage
+
+```ruby
+# Creating a new member
+member = Webring::Member.create(url: "https://example.com", name: "Example Site")
+
+# Finding the next member
+next_member = Webring::Member.find_next(member.uid)
+
+# Finding the previous member
+prev_member = Webring::Member.find_previous(member.uid)
+
+# Finding a random member (excluding the current one)
+random_member = Webring::Member.find_random(source_member_uid: member.uid)
+```
 
 ## Modules
 
@@ -230,23 +409,17 @@ Navigation controller manages the webring navigation flow for end users visiting
 - `previous` - Redirects to the previous member in the webring
 - `random` - Redirects to a random member in the webring
 
-This controller handles requests that come directly from webring members' sites. When a user clicks a navigation button on a webring widget (displayed on a member's site), the request is sent to this controller with the current member's UID. The controller then determines the appropriate member to navigate to and redirects the user to that member's URL.
+This controller handles requests to navigate between members. When a navigation request is received with a source member's UID, the controller determines the appropriate member to navigate to and redirects the user to that member's URL.
 
 #### How to Use the Navigation Controller
 
-To use the navigation controller in your webring implementation, you need to include navigation links on each member's website. These links should point to your application's navigation routes with the `source_member_uid` parameter.
+To use the navigation controller in your webring implementation, you need to create navigation links that point to your application's navigation routes with the `source_member_uid` parameter.
 
-Example HTML for your webring widget:
-
-```html
-<div class="webring-widget">
-  <p>This site is part of a webring</p>
-  <nav>
-    <a href="https://your-app.com/webring/previous?source_member_uid=abc123...">← Previous</a>
-    <a href="https://your-app.com/webring/random?source_member_uid=abc123...">Random</a>
-    <a href="https://your-app.com/webring/next?source_member_uid=abc123...">Next →</a>
-  </nav>
-</div>
+Example routes:
+```
+https://your-app.com/webring/previous?source_member_uid=abc123...
+https://your-app.com/webring/random?source_member_uid=abc123...
+https://your-app.com/webring/next?source_member_uid=abc123...
 ```
 
 Replace `abc123...` with the actual member UID and `https://your-app.com` with your application's domain.
@@ -305,7 +478,86 @@ Members controller provides full CRUD functionality for managing webring members
 - `update` - Updates an existing webring member
 - `destroy` - Deletes a webring member
 
-This controller is primarily designed for administrative purposes and will be used by the admin panel to manage webring membership.
+This controller provides the basic functionality for your application to manage webring membership.
+
+## Widget
+
+### Webring::WidgetController
+
+The Widget controller serves a JavaScript widget that can be embedded on member sites to provide navigation through the webring.
+
+- `show` - Serves the widget.js JavaScript file with proper CORS headers
+
+### Widget.js
+
+The widget.js file is a standalone JavaScript snippet that creates a navigation widget on member sites. It's designed to be easily embedded with a single script tag and offers various customization options.
+
+#### How to Use the Widget
+
+To add the webring widget to a member's site, include the following code:
+
+```html
+<!-- Webring Widget -->
+<script src='https://yourhub.com/webring/widget.js' data-member-uid='MEMBER_UID'></script>
+<div id='webring-widget'></div>
+<!-- End Webring Widget -->
+```
+
+Replace `https://yourhub.com` with your application's domain and `MEMBER_UID` with the member's unique identifier.
+
+#### Widget Customization Options
+
+The widget can be customized through data attributes on the script tag:
+
+- **Widget Type** (`data-widget-type`):
+  - `full`: Text, back button, random button, forward button (default)
+  - `no-text`: Back button, random button, forward button (no text)
+  - `two-way`: Back and forward buttons (no random)
+  - `one-way`: Forward button only
+
+- **Button Text** (`data-button-text`):
+  - `true`: Show text labels on buttons (default)
+  - `false`: Show only symbols (no text)
+
+- **Styling** (`data-styles`):
+  - `full`: Apply all styles (default)
+  - `layout`: Only layout styles, no visual design
+  - `none`: No styles applied
+
+- **Target Element** (`data-target-id`):
+  - Sets a custom ID for the target container (default: `webring-widget`)
+
+#### Example With All Options
+
+```html
+<script src='https://yourhub.com/webring/widget.js'
+        data-member-uid='MEMBER_UID'
+        data-widget-type='full'
+        data-button-text='true'
+        data-styles='full'
+        data-target-id='custom-widget-id'></script>
+<div id='custom-widget-id'></div>
+```
+
+#### Multiple Widgets on the Same Page
+
+You can include multiple widgets on the same page by specifying different target IDs:
+
+```html
+<!-- First Widget -->
+<script src='https://yourhub.com/webring/widget.js'
+        data-member-uid='MEMBER_UID'
+        data-widget-type='full'
+        data-target-id='webring-widget-1'></script>
+<div id='webring-widget-1'></div>
+
+<!-- Second Widget -->
+<script src='https://yourhub.com/webring/widget.js'
+        data-member-uid='MEMBER_UID'
+        data-widget-type='no-text'
+        data-target-id='webring-widget-2'></script>
+<div id='webring-widget-2'></div>
+```
 
 ## Development
 
@@ -325,115 +577,21 @@ bin/rails db:migrate
 Which will run the migrations in the dummy app.
 You don't need to copy migrations to the dummy app, it looks for them in the engine.
 
-### Tailwind CSS Integration
-
-This gem integrates with Tailwind CSS using the `tailwindcss-rails` gem for optimal performance and development experience. The setup includes:
-
-#### Gem Dependencies
-
-The gem includes `tailwindcss-rails` as a dependency, which provides:
-- Built-in Tailwind CSS compilation
-- Watch mode for development
-- Optimized builds for production
-- Automatic purging of unused styles
-
-#### Configuration
-
-The Tailwind configuration is defined in `engines/webring_rails/config/tailwind.config.js`:
-
-```javascript
-module.exports = {
-  content: [
-    './app/views/**/*.html.erb',
-    './app/helpers/**/*.rb',
-    './app/assets/stylesheets/**/*.css',
-    './app/javascript/**/*.js'
-  ]
-}
-```
-
-This configuration ensures that Tailwind scans all relevant files in the engine for class usage and only includes the CSS for classes that are actually used.
-
-#### Stylesheet Setup
-
-The main stylesheet at `app/assets/stylesheets/webring/application.css` uses Tailwind directives:
-
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-
-#### Integration with Host Application
-
-When using this gem in your Rails application, the Tailwind styles are automatically included when you include the engine's stylesheets. The compilation happens independently of the host application's asset pipeline, ensuring no conflicts.
-
-For host applications that also use Tailwind CSS, both stylesheets can coexist without issues, as each maintains its own compilation process.
-
-#### Benefits of This Approach
-
-- **Performance**: Only includes CSS for classes actually used in the engine
-- **Isolation**: No conflicts with host application's styling
-- **Development Experience**: Automatic recompilation during development
-- **Production Ready**: Optimized builds with proper purging
-
 ### Testing
 
 > [!WARNING]
 > As of now, there are no tests. Contributions to add test coverage are welcome!
 
-## Widget Implementation
+## Contributing
 
-> [!TIP]
-> The widget is a key feature that allows members to display webring navigation on their websites.
+We welcome contributions to Webring for Rails! Here's how you can help:
 
-### Adding a Widget to Member's Site
-
-Once a member is added to your webring, they need to include the widget on their site to enable navigation to other webring members. The widget is a JavaScript file that creates navigation links on the member's website.
-
-#### Basic Implementation
-
-To add the widget to a member's website, they need to:
-
-1. Add the widget script to their HTML page
-2. Include a container element with the specific ID
-
-```html
-<!-- Webring Widget -->
-<script src="https://your-app-domain.com/webring/widget.js" data-member-uid="MEMBER_UID"></script>
-<div id="webring-widget"></div>
-<!-- End Webring Widget -->
-```
-
-Replace:
-- `your-app-domain.com` with your application's actual domain
-- `MEMBER_UID` with the unique identifier of the member in your webring
-
-#### How the Widget Works
-
-When added to a member's site, the widget:
-1. Creates a small UI element with "Previous", "Random", and "Next" navigation links
-2. The links point back to your webring hub application, passing the member's UID
-3. When a visitor clicks a navigation link, they are redirected to another member's site
-4. The navigation preserves the ring structure, allowing visitors to traverse through the entire webring
-
-#### Widget Placement
-
-Members should place the widget code in a visible area of their site, such as:
-- The site footer
-- A sidebar
-- The about page
-- Any area where they want to promote their webring membership
-
-#### Customization Options
-
-The default widget styling is minimal and should work with most websites. Members who want to customize the appearance can add their own CSS styles by targeting the `.webring-nav` CSS class.
-
-#### Administration
-
-From the webring administration interface, you can:
-- View a preview of how the widget will look on a member's site
-- Provide members with their personalized widget code when they're approved to join
+1. Fork the repository
+2. Create a feature branch: `git checkout -b my-new-feature`
+3. Make your changes and add tests if possible
+4. Commit your changes: `git commit -am 'Add some feature'`
+5. Push to the branch: `git push origin my-new-feature`
+6. Submit a pull request
 
 ## License
 

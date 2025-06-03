@@ -26,7 +26,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'propshaft', '>= 0.9', '< 2.0'
   spec.add_dependency 'rails', '>= 7.0'
-  spec.add_dependency 'tailwindcss-rails', '>= 2.0'
 
   spec.add_development_dependency 'rubocop', '~> 1.75'
   spec.add_development_dependency 'rubocop-rails', '~> 2.31'
