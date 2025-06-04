@@ -2,6 +2,11 @@ module Webring
   class Engine < ::Rails::Engine
     isolate_namespace Webring
 
+    # Add concerns to autoload paths
+    initializer 'webring.autoload_paths' do |app|
+      app.config.autoload_paths += %W[#{config.root}/app/models/concerns]
+    end
+
     # configure app generators for templates
     config.app_generators do |g|
       g.templates.unshift File.expand_path('../../generators/webring/templates', __dir__)
