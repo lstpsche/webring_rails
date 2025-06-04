@@ -76,6 +76,10 @@ Metrics/BlockLength:
 Metrics/ParameterLists:
   Max: 10
 
+Naming/FileName:
+  Exclude:
+    - lib/webring-rails.rb
+
 Naming/RescuedExceptionsVariableName:
   PreferredName: error
 
