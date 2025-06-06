@@ -6,8 +6,7 @@ Example:
     rails generate webring:install
 
     This will create:
-        config/initializers/webring.rb
-        # And mount the Webring engine in your routes.rb file
+        # Mount the Webring engine in your routes.rb file
 
 Example:
     rails generate webring:member
@@ -15,11 +14,25 @@ Example:
     This will create:
         app/models/webring/member.rb
         db/migrate/TIMESTAMP_create_webring_members.rb
-        # And add member routes to your routes.rb file
 
 Example:
-    rails generate webring:controller
+    rails generate webring:membership_request
+
+    This will create:
+        app/models/webring/membership_request.rb
+        db/migrate/TIMESTAMP_create_webring_membership_requests.rb
+        db/migrate/TIMESTAMP_add_membership_request_to_webring_members.rb
+
+Example:
+    rails generate webring:navigation_controller
 
     This will create:
         app/controllers/webring/navigation_controller.rb
         # And add navigation routes to your routes.rb file
+
+Example:
+    rails generate webring:membership_requests_controller
+
+    This will create:
+        app/controllers/webring/membership_requests_controller.rb
+        # And add membership request routes to your routes.rb file

@@ -1,0 +1,41 @@
+==============================================
+Webring::MembershipRequest Model Has Been Generated!
+==============================================
+
+The MembershipRequest model is the core component for handling new site requests to join your webring. Follow these steps to complete the setup:
+
+1. Run Database Migration
+------------------------
+Apply the migration to create the webring_membership_requests table:
+
+    $ rails db:migrate
+
+2. Review and Customize the Model
+-------------------------------
+The generated model is located at:
+    app/models/webring/membership_request.rb
+
+The MembershipRequest model has the following attributes:
+  - name: The name of the requesting site (required)
+  - url: The URL of the requesting site (required)
+  - callback_email: The email address to send notifications to (required)
+  - description: The description of the requesting site (required)
+  - status: The status of the request (pending, approved, rejected)
+
+3. Generate Controller [Optional]
+--------------------------------
+Generate a controller to handle membership requests:
+
+    $ rails generate webring:controller:membership_requests
+
+This will:
+  - Create the Webring::MembershipRequestsController in app/controllers/webring/membership_requests_controller.rb
+  - Add membership request routes to your routes.rb file:
+    - GET /webring/membership_requests/new - Renders the view for submitting a new membership request (view is your responsibility)
+    - POST /webring/membership_requests    - Creates a new membership request
+
+4. Managing Membership Requests
+-------------------------------
+You can manage membership requests using the Webring::MembershipRequest model:
+
+    Webring::MembershipRequest.create(name: 'Example Site', url: 'https://example.com', description: 'Example description', callback_email: 'example@example.com')

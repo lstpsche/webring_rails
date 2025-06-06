@@ -10,7 +10,7 @@ module Webring
       end
 
       def invoke_webring_controller
-        invoke 'webring:controller'
+        invoke 'webring:member_controller'
       end
     end
   end

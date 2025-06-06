@@ -2,14 +2,15 @@ class CreateWebringMembers < ActiveRecord::Migration<%= "[#{Rails::VERSION::MAJO
   def change
     create_table :webring_members do |t|
       t.string :uid, null: false, limit: 32
-      t.string :name
+      t.string :name, null: false
       t.string :url, null: false
+      t.text :description, null: false
+
+      t.index :uid, unique: true
+      t.index :name, unique: true
+      t.index :url, unique: true
 
       t.timestamps
     end
-
-    add_index :webring_members, :uid, unique: true
-    add_index :webring_members, :name, unique: true
-    add_index :webring_members, :url, unique: true
   end
 end

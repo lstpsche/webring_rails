@@ -13,6 +13,7 @@ module Webring
     #   # uid  - A unique identifier for the member (automatically generated)
     #   # name - The name of the member site (defaults to URL if not provided)
     #   # url  - The URL of the member site (required)
+    #   # description - The description of the member site (required)
     #
     # @note After running this generator, you should run the migration with:
     #       rails db:migrate

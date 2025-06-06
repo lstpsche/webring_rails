@@ -18,21 +18,14 @@ The generated model is located at:
 
 The Member model has the following attributes:
   - uid: A unique identifier automatically generated for each member (32-character hex)
-  - name: The name of the member site (optional, defaults to URL if not provided)
+  - name: The name of the member site (required)
   - url: The URL of the member site (required)
+  - description: The description of the member site (required)
 
 3. Adding Members to Your Webring
 -------------------------------
 You can add members to your webring using the Webring::Member model:
 
-    Webring::Member.create(name: 'Example Site', url: 'https://example.com')
+    Webring::Member.create(name: 'Example Site', url: 'https://example.com', description: 'Example description')
 
-The uid will be automatically generated if not provided.
-
-4. Next Steps
------------
-Consider generating the navigation controller to enable navigation between webring members:
-
-    $ rails generate webring:controller
-
-This will create routes and controller actions for webring navigation.
+The uid will be automatically generated if not provided. It is recommended to leave the UID generation to the model.

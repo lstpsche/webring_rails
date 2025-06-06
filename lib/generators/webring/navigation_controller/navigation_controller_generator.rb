@@ -14,7 +14,7 @@ module Webring
     #
     # @note This generator should be run after installing the Webring engine and
     #       generating the Member model with webring:member
-    class ControllerGenerator < Rails::Generators::Base
+    class NavigationControllerGenerator < Rails::Generators::Base
       include Shared::RouteInjector
 
       source_root File.expand_path('templates', __dir__)

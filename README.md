@@ -11,6 +11,7 @@ Webring for Rails (webring_rails) is a flexible engine for creating and managing
 - UID-based member identification for security
 - Embeddable JavaScript widget for easy member site integration
 - Customizable widget appearance and behavior
+- Optional membership request system for sites to apply to join the webring
 - Generators for easy setup and customization
 - Extensible architecture for adding custom features
 
@@ -35,9 +36,22 @@ rails generate webring:install
 rails generate webring:member
 
 # Create the navigation controller
-rails generate webring:controller
+rails generate webring:controller:navigation
+```
 
-# Run migrations
+### Optional Features
+
+```bash
+# Enable the membership request system
+rails generate webring:membership_request
+
+# Add membership request controller and routes
+rails generate webring:controller:membership_requests
+```
+
+Finally, run the migrations:
+
+```bash
 rails db:migrate
 ```
 

@@ -1,11 +1,10 @@
 module Webring
   class MembersController < ::ApplicationController
-    before_action :set_member, only: %i[show edit update destroy]
+    before_action :members, only: %i[index]
+    before_action :member, only: %i[show edit update destroy]
 
     # GET /webring/members
-    def index
-      @members = Member.all.order(created_at: :desc)
-    end
+    def index; end
 
     # GET /webring/members/1
     def show; end
@@ -31,8 +30,8 @@ module Webring
 
     # PATCH/PUT /webring/members/1
     def update
-      if @member.update(member_params)
-        redirect_to admin_panel_member_path(@member), notice: 'Member was successfully updated.'
+      if member.update(member_params)
+        redirect_to admin_panel_member_path(member), notice: 'Member was successfully updated.'
       else
         render :edit, status: :unprocessable_entity
       end
@@ -40,21 +39,23 @@ module Webring
 
     # DELETE /webring/members/1
     def destroy
-      @member.destroy
+      member.destroy
 
       redirect_to admin_panel_members_url, notice: 'Member was successfully destroyed.'
     end
 
     private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_member
-      @member = Member.find_by!(uid: params[:id])
+    def members
+      @members ||= Member.all.order(created_at: :desc)
     end
 
-    # Only allow a list of trusted parameters through.
+    def member
+      @member ||= Member.find_by!(uid: params[:id])
+    end
+
     def member_params
-      params.require(:member).permit(:name, :url)
+      params.require(:member).permit(:name, :url, :description)
     end
   end
 end

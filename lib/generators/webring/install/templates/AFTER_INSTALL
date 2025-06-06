@@ -33,7 +33,26 @@ This will:
     - GET /webring/previous - Navigate to the previous site
     - GET /webring/random   - Navigate to a random site
 
-3. Customize Your Routes [Optional]
+3. Enable Membership Requests [Optional]
+----------------------------------------
+Generate a membership request model to allow sites to request joining your webring:
+
+    $ rails generate webring:membership_request
+
+This will:
+  - Create a Webring::MembershipRequest model in app/models/webring/membership_request.rb
+  - Create migrations to set up the webring_membership_requests table
+  - Add appropriate database indexes and relations to Webring::Member
+
+After generating the model, run the migration:
+
+    $ rails db:migrate
+
+Then, optionally generate a controller to handle membership requests:
+
+    $ rails generate webring:controller:membership_requests
+
+4. Customize Your Routes [Optional]
 ----------------------------------
 The engine is mounted at '/webring' by default. You can change this in your routes.rb file:
 
@@ -43,7 +62,7 @@ The engine is mounted at '/webring' by default. You can change this in your rout
     # Example custom mount point
     mount Webring::Engine => '/network', as: 'webring'
 
-4. Add Webring Navigation UI Elements
+5. Add Webring Navigation UI Elements
 ------------------------------------
 Add navigation links to your views to enable users to navigate through the webring:
 
@@ -54,7 +73,7 @@ Add navigation links to your views to enable users to navigate through the webri
 Note: Replace 'your_member.uid' with the actual UID of your site in the webring.
       If you're building a standalone webring hub, you can omit the source_member_uid parameter.
 
-5. Managing Webring Members
+6. Managing Webring Members
 --------------------------
 You can add members to your webring using the Webring::Member model:
 
