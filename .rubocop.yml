@@ -7,6 +7,9 @@ AllCops:
     - bin/*
     - Gemfile.lock
     - lib/generators/webring/member/templates/migration.rb
+    - lib/generators/webring/membership_request/membership_request_generator.rb
+    - lib/generators/webring/membership_request/templates/*.rb
+    - lib/generators/webring/membership_request/templates/*.rb
     - vendor/**/*
   NewCops: disable
   SuggestExtensions: false
