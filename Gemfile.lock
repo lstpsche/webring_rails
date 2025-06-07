@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    webring-rails (1.2.0)
+    webring-rails (1.2.1)
       rails (~> 8.0)
 
 GEM

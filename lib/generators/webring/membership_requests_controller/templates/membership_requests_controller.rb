@@ -8,7 +8,7 @@ module Webring
       @membership_request = MembershipRequest.new(membership_request_params)
 
       if @membership_request.save
-        redirect_to root_path, notice: 'Your membership request has been submitted!'
+        redirect_to main_app.root_path, notice: 'Your membership request has been submitted!'
       else
         render :new, status: :unprocessable_entity
       end
