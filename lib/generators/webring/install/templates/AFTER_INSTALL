@@ -2,7 +2,7 @@
 Webring Engine Has Been Successfully Installed!
 ==============================================
 
-The Webring engine has been mounted at '/webring' in your application. Below are
+The Webring engine has been mounted at '/webring' in your application as well as the widget route. Below are
 the next steps to complete the webring setup and customization options.
 
 1. Configure Your Members Model
@@ -24,7 +24,7 @@ After generating the model, run the migration:
 --------------------------------------------
 Generate a navigation controller to handle navigation between webring members:
 
-    $ rails generate webring:controller
+    $ rails generate webring:navigation_controller
 
 This will:
   - Create the Webring::NavigationController in app/controllers/webring/navigation_controller.rb
@@ -50,7 +50,7 @@ After generating the model, run the migration:
 
 Then, optionally generate a controller to handle membership requests:
 
-    $ rails generate webring:controller:membership_requests
+    $ rails generate webring:membership_requests_controller
 
 4. Customize Your Routes [Optional]
 ----------------------------------
@@ -80,3 +80,13 @@ You can add members to your webring using the Webring::Member model:
     Webring::Member.create(name: 'Example Site', url: 'https://example.com')
 
 Consider building an admin interface to manage your webring members.
+
+7. Customize the Widget
+-----------------------
+You can customize the widget's logo or the widget's server controller by adding a customizable widget controller.
+
+    $ rails generate webring:custom_widget_controller
+
+This will:
+  - Create a Webring::CustomWidgetController in app/controllers/webring/custom_widget_controller.rb
+  - Replace the default widget route with the customizable one or add the customizable one if the default one is not present

@@ -14,6 +14,7 @@
  * - no-text: back btn, random btn, forward btn (no text)
  * - two-way: back btn, forward btn (no random)
  * - one-way: forward btn only
+ * - random-only: random btn only
  *
  * Additional Options:
  * - data-button-text="true|false": If true, buttons will show text labels. If false, only symbols are shown. Default: true
@@ -26,13 +27,15 @@
 (function() {
   // Configuration constants
   const WIDGET_CONFIG = {
-    VALID_TYPES: ['full', 'no-text', 'two-way', 'one-way'],
+    VALID_TYPES: ['full', 'no-text', 'two-way', 'one-way', 'random-only'],
     DEFAULT_TYPE: 'full',
     DEFAULT_TARGET_ID: 'webring-widget',
     STYLE_ID: 'webring-widget-styles',
     VALID_STYLE_TYPES: ['full', 'layout', 'none'],
     DEFAULT_STYLE_TYPE: 'full'
   };
+
+  const logoSvg = (width = 20, height = 20, style = "") => `<<REPLACE_ME_LOGO_SVG>>`;
 
   const NAVIGATION_ACTIONS = {
     prev: {
@@ -42,24 +45,32 @@
       path: 'previous'
     },
     random: {
-      symbol: '⚡',
-      text: 'Random',
+      symbol: logoSvg(22, 22),
+      text: `${logoSvg(20, 20, "margin-right: 4px; margin-top: 1px;")} Random`,
       title: 'Random site',
-      path: 'random'
+      path: 'random',
+      additionalClass: 'random-btn'
     },
     next: {
       symbol: '»',
       text: 'Next »',
       title: 'Next site',
       path: 'next'
+    },
+    logoOnly: {
+      symbol: logoSvg(22, 22),
+      text: `${logoSvg(20, 20)} Random`,
+      title: 'Ruby Webring',
+      path: ''
     }
   };
 
   const WIDGET_TYPE_CONFIG = {
     'full': { showTitle: true, actions: ['prev', 'random', 'next'] },
     'no-text': { showTitle: false, actions: ['prev', 'random', 'next'] },
-    'two-way': { showTitle: false, actions: ['prev', 'next'] },
-    'one-way': { showTitle: false, actions: ['next'] }
+    'two-way': { showTitle: false, actions: ['prev', 'logoOnly', 'next'], showLogoInMiddle: true },
+    'one-way': { showTitle: false, actions: ['next'], showLogoInButton: true },
+    'random-only': { showTitle: false, actions: ['random'] }
   };
 
   // Define styles outside the function to avoid duplication
@@ -83,6 +94,7 @@
         gap: 10px;
         width: 100%;
         justify-content: center;
+        align-items: center;
       }
       .webring-nav a.webring-btn {
         display: flex;
@@ -91,14 +103,23 @@
         padding: 6px 12px;
         text-decoration: none;
       }
+      .webring-nav a.webring-btn.random-btn {
+        padding: 6px 9px 6px 9px;
+      }
+      .webring-nav .logo-only {
+        padding: 8px 3px 6px 3px;
+      }
       .webring-nav[data-widget-type="no-text"] {
         padding: 8px 10px;
       }
       .webring-nav[data-widget-type="one-way"] {
         max-width: 200px;
       }
-      .webring-nav[data-widget-type="one-way"] nav {
-        justify-content: center;
+      .webring-logo-inline {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 6px;
+        margin-top: 1px;
       }
     `,
     design: `
@@ -175,13 +196,28 @@
       const config = WIDGET_TYPE_CONFIG[widgetType];
       const linkElements = config.actions.map(action => {
         const actionConfig = NAVIGATION_ACTIONS[action];
+
+        // Logo-only block
+        if (action === 'logoOnly') {
+          return `<div class="logo-only">${logoSvg(22, 22)}</div>`;
+        }
+
         const url = `${baseUrl}/webring/${actionConfig.path}?source_member_uid=${memberUid}`;
-        const label = buttonText ? actionConfig.text : actionConfig.symbol;
-        return `<a href="${url}" title="${actionConfig.title}" class="webring-btn">${label}</a>`;
+        let label = buttonText ? actionConfig.text : actionConfig.symbol;
+        const btnClass = `webring-btn${actionConfig.additionalClass ? ` ${actionConfig.additionalClass}` : ''}`;
+
+        // One-way type case
+        if (widgetType === 'one-way' && config.showLogoInButton && action === 'next') {
+          label = buttonText
+            ? `<span class="webring-logo-inline">${logoSvg(20, 20)}</span> ${actionConfig.text}`
+            : `<span class="webring-logo-inline">${logoSvg(20, 20)}</span> ${actionConfig.symbol}`;
+        }
+
+        return `<a href="${url}" title="${actionConfig.title}" class="${btnClass}">${label}</a>`;
       }).join('\n          ');
 
       // Create widget HTML
-      const title = config.showTitle ? '<span class="webring-title">Webring</span>' : '';
+      const title = config.showTitle ? '<span class="webring-title">Ruby Webring</span>' : '';
       container.innerHTML = `
         <div class="webring-nav" data-widget-type="${widgetType}">
           ${title}
