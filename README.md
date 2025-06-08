@@ -2,7 +2,7 @@
 
 # Webring for Rails
 
-Webring for Rails (webring_rails) is a flexible engine for creating and managing a webring system in your Ruby on Rails application. A webring is a collection of websites linked together in a circular structure, allowing visitors to navigate from one site to another.
+[Webring for Rails (webring-rails)](https://github.com/lstpsche/webring-rails) is a flexible engine for creating and managing a webring system in your Ruby on Rails application. A webring is a collection of websites linked together in a circular structure, allowing visitors to navigate from one site to another.
 
 ## Features
 
