@@ -19,6 +19,7 @@ module Webring
             .root.join('app/assets/javascripts/webring/widget.js')
             .read
             .gsub('<<REPLACE_ME_LOGO_SVG>>', logo_svg)
+            .gsub('"<<REPLACE_ME_TEXT_DEFAULTS>>"', JSON.generate(text_defaults))
 
           render js: widget_js
         end
@@ -41,6 +42,17 @@ module Webring
           <path d="M13 3L6 14H12L11 21L18 10H12L13 3Z" fill="currentColor"/>
         </svg>
       SVG
+    end
+
+    # Provide default texts for the widget
+    # Override this method to customize the default texts
+    def text_defaults
+      {
+        prev: { default: 'Prev', enforced: false },
+        random: { default: 'Random', enforced: false },
+        next: { default: 'Next', enforced: false },
+        widgetTitle: { default: 'Webring', enforced: false }
+      }
     end
   end
 end

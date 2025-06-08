@@ -22,6 +22,10 @@
  *   - full: Apply all styles (default)
  *   - layout: Only layout styles, no visual design
  *   - none: No styles applied
+ * - data-prev-text="Custom Text": Sets custom text for the "previous" button. Default: "« Prev"
+ * - data-random-text="Custom Text": Sets custom text for the "random" button (keeps the logo). Default: "Random"
+ * - data-next-text="Custom Text": Sets custom text for the "next" button. Default: "Next »"
+ * - data-widget-text="Custom Text": Sets custom text for the widget title. Default: "Webring"
  */
 
 (function() {
@@ -32,29 +36,64 @@
     DEFAULT_TARGET_ID: 'webring-widget',
     STYLE_ID: 'webring-widget-styles',
     VALID_STYLE_TYPES: ['full', 'layout', 'none'],
-    DEFAULT_STYLE_TYPE: 'full'
+    DEFAULT_STYLE_TYPE: 'full',
+    DEFAULT_TEXTS: {
+      PREV: '« Prev',
+      RANDOM: 'Random',
+      NEXT: 'Next »',
+      WIDGET: 'Webring'
+    }
   };
+
+  // Default text configurations
+  const TEXT_DEFAULTS = {
+    prev: { default: '« Prev', enforced: false },
+    random: { default: 'Random', enforced: false },
+    next: { default: 'Next »', enforced: false },
+    widgetTitle: { default: 'Webring', enforced: false }
+  };
+
+  // These defaults will be provided by the widget_controller
+  const PROVIDED_TEXT_DEFAULTS = "<<REPLACE_ME_TEXT_DEFAULTS>>";
+
+  // Parse the provided defaults JSON string
+  const parsedProvidedDefaults =
+    PROVIDED_TEXT_DEFAULTS !== "<<REPLACE_ME_TEXT_DEFAULTS>>"
+      ? (typeof PROVIDED_TEXT_DEFAULTS === 'string' ? JSON.parse(PROVIDED_TEXT_DEFAULTS) : PROVIDED_TEXT_DEFAULTS)
+      : {};
+
+  // Merge defaults with provided defaults, with provided taking priority
+  const FULL_TEXT_DEFAULTS = Object.keys(TEXT_DEFAULTS).reduce((acc, key) => {
+    acc[key] = {
+      default: parsedProvidedDefaults[key]?.default || TEXT_DEFAULTS[key].default,
+      enforced: parsedProvidedDefaults[key]?.enforced || TEXT_DEFAULTS[key].enforced
+    };
+    return acc;
+  }, {});
 
   const logoSvg = (width = 20, height = 20, style = "") => `<<REPLACE_ME_LOGO_SVG>>`;
 
   const NAVIGATION_ACTIONS = {
     prev: {
       symbol: '«',
-      text: '« Prev',
+      text: `« ${FULL_TEXT_DEFAULTS.prev.default}`,
+      text_enforced: FULL_TEXT_DEFAULTS.prev.enforced,
       title: 'Previous site',
       path: 'previous',
       additionalClass: 'prev-btn'
     },
     random: {
       symbol: logoSvg(23, 23),
-      text: `${logoSvg(20, 20, "margin-right: 4px; margin-top: 1px;")} Random`,
+      text: `${logoSvg(20, 20, "margin-right: 4px; margin-top: 1px;")} ${FULL_TEXT_DEFAULTS.random.default}`,
+      text_enforced: FULL_TEXT_DEFAULTS.random.enforced,
       title: 'Random site',
       path: 'random',
       additionalClass: 'random-btn'
     },
     next: {
       symbol: '»',
-      text: 'Next »',
+      text: `${FULL_TEXT_DEFAULTS.next.default} »`,
+      text_enforced: FULL_TEXT_DEFAULTS.next.enforced,
       title: 'Next site',
       path: 'next',
       additionalClass: 'next-btn'
@@ -142,6 +181,7 @@
         font-weight: 600;
       }
       .webring-nav a.webring-btn {
+        text-wrap: nowrap;
         color: #000000;
         font-weight: 600;
         background-color: #ffffff;
@@ -184,6 +224,12 @@
     const stylesType = script.getAttribute('data-styles') || WIDGET_CONFIG.DEFAULT_STYLE_TYPE;
     const stylesOption = WIDGET_CONFIG.VALID_STYLE_TYPES.includes(stylesType) ? stylesType : WIDGET_CONFIG.DEFAULT_STYLE_TYPE;
 
+    // Custom text data attributes
+    const prevText = script.getAttribute('data-prev-text');
+    const randomText = script.getAttribute('data-random-text');
+    const nextText = script.getAttribute('data-next-text');
+    const widgetText = script.getAttribute('data-widget-text');
+
     if (!memberUid) {
       console.error('Webring Widget: Missing data-member-uid attribute on script tag.');
       return;
@@ -204,10 +250,27 @@
         return;
       }
 
+      // Apply custom texts if provided or use defaults based on enforcement settings
+      const customTexts = {
+        prev: NAVIGATION_ACTIONS.prev.text_enforced ?
+          { ...NAVIGATION_ACTIONS.prev } :
+          (prevText ? { ...NAVIGATION_ACTIONS.prev, text: `« ${prevText}` } : NAVIGATION_ACTIONS.prev),
+        random: NAVIGATION_ACTIONS.random.text_enforced ?
+          { ...NAVIGATION_ACTIONS.random } :
+          (randomText ? {
+            ...NAVIGATION_ACTIONS.random,
+            text: `${logoSvg(20, 20, "margin-right: 4px; margin-top: 1px;")} ${randomText}`
+          } : NAVIGATION_ACTIONS.random),
+        next: NAVIGATION_ACTIONS.next.text_enforced ?
+          { ...NAVIGATION_ACTIONS.next } :
+          (nextText ? { ...NAVIGATION_ACTIONS.next, text: `${nextText} »` } : NAVIGATION_ACTIONS.next),
+        logoOnly: NAVIGATION_ACTIONS.logoOnly
+      };
+
       // Navigation links
       const config = WIDGET_TYPE_CONFIG[widgetType];
       const linkElements = config.actions.map(action => {
-        const actionConfig = NAVIGATION_ACTIONS[action];
+        const actionConfig = customTexts[action] || NAVIGATION_ACTIONS[action];
 
         // Logo-only block
         if (action === 'logoOnly') {
@@ -220,8 +283,12 @@
 
         // One-way type case
         if (widgetType === 'one-way' && config.showLogoInButton && action === 'next') {
+          const buttonTextContent = NAVIGATION_ACTIONS.next.text_enforced ?
+            FULL_TEXT_DEFAULTS.next.default :
+            (nextText || customTexts.next.text.replace(' »', ''));
+
           label = buttonText
-            ? `<span class="webring-logo-inline">${logoSvg(20, 20)}</span> ${actionConfig.text}`
+            ? `<span class="webring-logo-inline">${logoSvg(20, 20)}</span> ${buttonTextContent} »`
             : `<span class="webring-logo-inline">${logoSvg(20, 20)}</span> ${actionConfig.symbol}`;
         }
 
@@ -229,7 +296,11 @@
       }).join('\n          ');
 
       // Create widget HTML
-      const title = config.showTitle ? '<span class="webring-title">Ruby Webring</span>' : '';
+      const titleText = FULL_TEXT_DEFAULTS.widgetTitle.enforced ?
+        FULL_TEXT_DEFAULTS.widgetTitle.default :
+        (widgetText || FULL_TEXT_DEFAULTS.widgetTitle.default);
+
+      const title = config.showTitle ? `<span class="webring-title">${titleText}</span>` : '';
       container.innerHTML = `
         <div class="webring-nav" data-widget-type="${widgetType}" data-button-text="${buttonText}">
           ${title}
