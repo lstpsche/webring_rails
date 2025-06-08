@@ -40,13 +40,24 @@ module Webring
       def inject_into_member_model
         member_model_path = 'app/models/webring/member.rb'
 
+        inject_conditions = [
+          { line: 'UID_LENGTH =', inject_options: { after: /UID_LENGTH =.*\n\n/ } },
+          { line: 'extend Webring::Navigation', inject_options: { after: "extend Webring::Navigation\n\n" } },
+          { line: 'class Member < ApplicationRecord', inject_options: { after: "class Member < ApplicationRecord\n" } }
+        ]
+
         if File.exist?(member_model_path)
-          inject_into_file member_model_path, after: "class Member\n" do
-            "  belongs_to :membership_request,\n" \
-            "             class_name: 'Webring::MembershipRequest',\n" \
-            "             foreign_key: :webring_membership_request_id,\n" \
-            "             optional: true,\n" \
-            "             inverse_of: :member\n"
+          content = File.read(member_model_path)
+          options = inject_conditions.find { |condition| content.include?(condition[:line]) }&.fetch(:inject_options)
+          return if options.nil? || options.empty?
+
+          inject_into_file member_model_path, **options do
+            "    belongs_to :membership_request,\n" \
+            "               class_name: 'Webring::MembershipRequest',\n" \
+            "               foreign_key: :webring_membership_request_id,\n" \
+            "               optional: true,\n" \
+            "               inverse_of: :member\n" \
+            "\n"
           end
         end
       end
