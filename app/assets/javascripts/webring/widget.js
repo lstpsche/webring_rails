@@ -2,11 +2,11 @@
  * Webring Navigation Widget
  *
  * Usage:
- * <script src="https://yourhub.com/webring/widget.js" data-member-uid="YOUR_MEMBER_UID" data-widget-type="full"></script>
+ * <script src="https://yourhub.com/widget.js" data-member-uid="YOUR_MEMBER_UID" data-widget-type="full"></script>
  * <div id="webring-widget"></div>
  *
  * For multiple widgets on same page:
- * <script src="https://yourhub.com/webring/widget.js" data-member-uid="YOUR_MEMBER_UID" data-widget-type="full" data-target-id="custom-widget-id"></script>
+ * <script src="https://yourhub.com/widget.js" data-member-uid="YOUR_MEMBER_UID" data-widget-type="full" data-target-id="custom-widget-id"></script>
  * <div id="custom-widget-id"></div>
  *
  * Widget Types:

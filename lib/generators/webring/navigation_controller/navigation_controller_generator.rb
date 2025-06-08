@@ -22,14 +22,12 @@ module Webring
       desc 'Creates a Webring::NavigationController and necessary routes for webring navigation'
 
       # Creates the NavigationController file based on the template
-      # @return [void]
       def create_controller_file
         template 'navigation_controller.rb', 'app/controllers/webring/navigation_controller.rb'
       end
 
       # Adds navigation routes to the application's routes.rb file
       # These routes are used to navigate between webring members
-      # @return [void]
       def create_navigation_routes
         route_content = <<~ROUTE
           # Webring navigation routes

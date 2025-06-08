@@ -7,7 +7,7 @@ module Webring
     before_action :set_cors_headers
 
     # Serve the webring navigation widget JavaScript
-    # GET /webring/widget.js
+    # GET /widget.js
     def show
       respond_to do |format|
         format.js do
