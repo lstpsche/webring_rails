@@ -15,10 +15,11 @@ module Webring
 
       desc 'Creates Webring routes and mounts the engine in your application.'
 
-      # Adds the engine mount point to the application's routes.rb file
+      # Adds the engine mount point and widget route to the application's routes.rb file
       # @return [void]
       def add_webring_routes
         route "mount Webring::Engine => '/webring', as: 'webring'\n\n"
+        route "scope module: 'webring' do\n  get 'widget.js', to: 'widget#show', format: 'js', as: :widget\nend"
       end
 
       # Displays the README with next steps after installation
