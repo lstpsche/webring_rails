@@ -1,4 +1,4 @@
-![Webring Widget Sample](widget-sample.jpeg)
+![Webring Widget Sample](widget-sample.png)
 
 # Webring for Rails
 
