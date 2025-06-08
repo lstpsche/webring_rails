@@ -9,5 +9,16 @@ module Webring
         Add your custom logo SVG here
       SVG
     end
+
+    # Override default texts for the widget
+    # Remove the method or call `super` to use the gem's default texts
+    def text_defaults
+      {
+        prev: { default: 'Prev', enforced: false },
+        random: { default: 'Random', enforced: false },
+        next: { default: 'Next', enforced: false },
+        widgetTitle: { default: 'Webring', enforced: false }
+      }
+    end
   end
 end
