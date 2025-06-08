@@ -42,10 +42,11 @@
       symbol: '«',
       text: '« Prev',
       title: 'Previous site',
-      path: 'previous'
+      path: 'previous',
+      additionalClass: 'prev-btn'
     },
     random: {
-      symbol: logoSvg(22, 22),
+      symbol: logoSvg(23, 23),
       text: `${logoSvg(20, 20, "margin-right: 4px; margin-top: 1px;")} Random`,
       title: 'Random site',
       path: 'random',
@@ -55,13 +56,14 @@
       symbol: '»',
       text: 'Next »',
       title: 'Next site',
-      path: 'next'
+      path: 'next',
+      additionalClass: 'next-btn'
     },
     logoOnly: {
-      symbol: logoSvg(22, 22),
-      text: `${logoSvg(20, 20)} Random`,
-      title: 'Ruby Webring',
-      path: ''
+      symbol: logoSvg(23, 23),
+      text: logoSvg(23, 23),
+      path: '',
+      additionalClass: 'logo-only'
     }
   };
 
@@ -104,7 +106,7 @@
         text-decoration: none;
       }
       .webring-nav a.webring-btn.random-btn {
-        padding: 6px 9px 6px 9px;
+        padding: 6px 8px 6px 8px;
       }
       .webring-nav .logo-only {
         padding: 8px 3px 6px 3px;
@@ -120,6 +122,16 @@
         vertical-align: middle;
         margin-right: 6px;
         margin-top: 1px;
+      }
+      /* no-text prev button */
+      .webring-nav[data-button-text="false"] a.webring-btn.prev-btn {
+        padding-top: 5px;
+        padding-right: 12.5px;
+      }
+      /* no-text next button */
+      .webring-nav[data-button-text="false"] a.webring-btn.next-btn {
+        padding-top: 5px;
+        padding-left: 12.5px;
       }
     `,
     design: `
@@ -199,7 +211,7 @@
 
         // Logo-only block
         if (action === 'logoOnly') {
-          return `<div class="logo-only">${logoSvg(22, 22)}</div>`;
+          return `<div class="${actionConfig.additionalClass}">${actionConfig.symbol}</div>`;
         }
 
         const url = `${baseUrl}/webring/${actionConfig.path}?source_member_uid=${memberUid}`;
@@ -219,7 +231,7 @@
       // Create widget HTML
       const title = config.showTitle ? '<span class="webring-title">Ruby Webring</span>' : '';
       container.innerHTML = `
-        <div class="webring-nav" data-widget-type="${widgetType}">
+        <div class="webring-nav" data-widget-type="${widgetType}" data-button-text="${buttonText}">
           ${title}
           <nav class="webring-buttons">
             ${linkElements}
