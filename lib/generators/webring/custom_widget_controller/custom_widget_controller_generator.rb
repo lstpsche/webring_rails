@@ -19,14 +19,12 @@ module Webring
       desc 'Creates a Webring::CustomWidgetController and necessary routes for custom widget'
 
       # Creates the CustomWidgetController file based on the template
-      # @return [void]
       def create_controller_file
         template 'custom_widget_controller.rb', 'app/controllers/webring/custom_widget_controller.rb'
       end
 
       # Adds custom widget routes to the application's routes.rb file
       # These routes are used to create new custom widgets
-      # @return [void]
       def create_custom_widget_routes
         routes_file = 'config/routes.rb'
         widget_route = "get 'widget.js', to: 'widget#show', format: 'js', as: :widget"

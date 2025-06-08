@@ -26,20 +26,17 @@ module Webring
       desc 'Creates a Webring::MembershipRequest model and necessary migration for storing webring membership requests'
 
       # Creates a migration file to create the webring_membership_requests table
-      # @return [void]
       def create_migration_file
         migration_template 'migration.rb', 'db/migrate/create_webring_membership_requests.rb'
         migration_template 'relations_migration.rb', 'db/migrate/add_membership_request_to_webring_members.rb'
       end
 
       # Creates the MembershipRequest model file based on the template
-      # @return [void]
       def create_model_file
         template 'model.rb', 'app/models/webring/membership_request.rb'
       end
 
       # Injects the belongs_to relationship into the Member model
-      # @return [void]
       def inject_into_member_model
         member_model_path = 'app/models/webring/member.rb'
 
@@ -64,7 +61,6 @@ module Webring
       end
 
       # Displays the README with next steps after installation
-      # @return [void]
       def show_readme
         readme 'AFTER_INSTALL' if behavior == :invoke
       end

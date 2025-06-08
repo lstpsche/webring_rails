@@ -26,13 +26,11 @@ module Webring
       desc 'Creates a Webring::Member model and necessary migration for storing webring members'
 
       # Creates a migration file to create the webring_members table
-      # @return [void]
       def create_migration_file
         migration_template 'migration.rb', 'db/migrate/create_webring_members.rb'
       end
 
       # Creates the Member model file based on the template
-      # @return [void]
       def create_model_file
         template 'model.rb', 'app/models/webring/member.rb'
       end
@@ -47,7 +45,6 @@ module Webring
       end
 
       # Displays the README with next steps after installation
-      # @return [void]
       def show_readme
         readme 'AFTER_INSTALL' if behavior == :invoke
       end

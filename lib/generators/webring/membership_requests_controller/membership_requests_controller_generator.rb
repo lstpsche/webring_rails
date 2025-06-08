@@ -21,14 +21,12 @@ module Webring
       desc 'Creates a Webring::MembershipRequestsController and necessary routes for membership requests'
 
       # Creates the MembershipRequestsController file based on the template
-      # @return [void]
       def create_controller_file
         template 'membership_requests_controller.rb', 'app/controllers/webring/membership_requests_controller.rb'
       end
 
       # Adds membership request routes to the application's routes.rb file
       # These routes are used to create new membership requests
-      # @return [void]
       def create_membership_request_routes
         route_content = <<~ROUTE
           # Webring membership request routes

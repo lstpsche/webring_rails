@@ -20,7 +20,6 @@ module Webring
         # to the end of the routes file.
         #
         # @param route_content [String] The routes to be added
-        # @return [void]
         def inject_webring_routes(route_content)
           cleared_route_content = route_content.gsub(/^/, '  ')
           routes_file = 'config/routes.rb'
