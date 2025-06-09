@@ -6,7 +6,7 @@ Example:
     rails generate webring:install
 
     This will create:
-        # Mount the Webring engine in your routes.rb file
+        # Mount the Webring engine and widget.js path in your routes.rb file
 
 Example:
     rails generate webring:member

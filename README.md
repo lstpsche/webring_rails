@@ -20,7 +20,7 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'webring_rails'
+gem 'webring-rails'
 ```
 
 Run:
@@ -36,7 +36,7 @@ rails generate webring:install
 rails generate webring:member
 
 # Create the navigation controller
-rails generate webring:controller:navigation
+rails generate webring:navigation_controller
 ```
 
 ### Optional Features
@@ -46,7 +46,7 @@ rails generate webring:controller:navigation
 rails generate webring:membership_request
 
 # Add membership request controller and routes
-rails generate webring:controller:membership_requests
+rails generate webring:membership_requests_controller
 ```
 
 Finally, run the migrations:
