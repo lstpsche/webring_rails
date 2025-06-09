@@ -30,28 +30,22 @@
 
 (function() {
   // Configuration constants
-  const WIDGET_CONFIG = {
-    VALID_TYPES: ['full', 'no-text', 'two-way', 'one-way', 'random-only'],
+  const WIDGET_CONFIG = Object.freeze({
+    VALID_TYPES: Object.freeze(['full', 'no-text', 'two-way', 'one-way', 'random-only']),
     DEFAULT_TYPE: 'full',
     DEFAULT_TARGET_ID: 'webring-widget',
     STYLE_ID: 'webring-widget-styles',
-    VALID_STYLE_TYPES: ['full', 'layout', 'none'],
-    DEFAULT_STYLE_TYPE: 'full',
-    DEFAULT_TEXTS: {
-      PREV: '« Prev',
-      RANDOM: 'Random',
-      NEXT: 'Next »',
-      WIDGET: 'Webring'
-    }
-  };
+    VALID_STYLE_TYPES: Object.freeze(['full', 'layout', 'none']),
+    DEFAULT_STYLE_TYPE: 'full'
+  });
 
   // Default text configurations
-  const TEXT_DEFAULTS = {
+  const TEXT_DEFAULTS = Object.freeze({
     prev: { default: '« Prev', enforced: false },
     random: { default: 'Random', enforced: false },
     next: { default: 'Next »', enforced: false },
     widgetTitle: { default: 'Webring', enforced: false }
-  };
+  });
 
   // These defaults will be provided by the widget_controller
   const PROVIDED_TEXT_DEFAULTS = "<<REPLACE_ME_TEXT_DEFAULTS>>";
@@ -62,18 +56,21 @@
       ? (typeof PROVIDED_TEXT_DEFAULTS === 'string' ? JSON.parse(PROVIDED_TEXT_DEFAULTS) : PROVIDED_TEXT_DEFAULTS)
       : {};
 
-  // Merge defaults with provided defaults, with provided taking priority
-  const FULL_TEXT_DEFAULTS = Object.keys(TEXT_DEFAULTS).reduce((acc, key) => {
-    acc[key] = {
-      default: parsedProvidedDefaults[key]?.default || TEXT_DEFAULTS[key].default,
-      enforced: parsedProvidedDefaults[key]?.enforced || TEXT_DEFAULTS[key].enforced
-    };
-    return acc;
-  }, {});
+  // Merge defaults with provided defaults
+  const FULL_TEXT_DEFAULTS = Object.freeze(
+    Object.keys(TEXT_DEFAULTS).reduce((acc, key) => {
+      const providedValue = parsedProvidedDefaults[key];
+      acc[key] = {
+        default: providedValue?.default ?? TEXT_DEFAULTS[key].default,
+        enforced: providedValue?.enforced ?? TEXT_DEFAULTS[key].enforced
+      };
+      return acc;
+    }, {})
+  );
 
-  const logoSvg = (width = 20, height = 20, style = "") => `<<REPLACE_ME_LOGO_SVG>>`;
+  const logoSvg = "<<REPLACE_ME_LOGO_SVG_FUNCTION>>";
 
-  const NAVIGATION_ACTIONS = {
+  const NAVIGATION_ACTIONS = Object.freeze({
     prev: {
       symbol: '«',
       text: `« ${FULL_TEXT_DEFAULTS.prev.default}`,
@@ -104,18 +101,17 @@
       path: '',
       additionalClass: 'logo-only'
     }
-  };
+  });
 
-  const WIDGET_TYPE_CONFIG = {
+  const WIDGET_TYPE_CONFIG = Object.freeze({
     'full': { showTitle: true, actions: ['prev', 'random', 'next'] },
     'no-text': { showTitle: false, actions: ['prev', 'random', 'next'] },
     'two-way': { showTitle: false, actions: ['prev', 'logoOnly', 'next'], showLogoInMiddle: true },
     'one-way': { showTitle: false, actions: ['next'], showLogoInButton: true },
     'random-only': { showTitle: false, actions: ['random'] }
-  };
+  });
 
-  // Define styles outside the function to avoid duplication
-  const STYLES = {
+  const STYLES = Object.freeze({
     layout: `
       .webring-nav {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -137,17 +133,17 @@
         justify-content: center;
         align-items: center;
       }
-      .webring-nav a.webring-btn {
+      .webring-btn {
         display: flex;
         align-items: center;
         justify-content: center;
         padding: 6px 12px;
         text-decoration: none;
       }
-      .webring-nav a.webring-btn.random-btn {
-        padding: 6px 8px 6px 8px;
+      .random-btn {
+        padding: 6px 8px;
       }
-      .webring-nav .logo-only {
+      .logo-only {
         padding: 8px 3px 6px 3px;
       }
       .webring-nav[data-widget-type="no-text"] {
@@ -162,13 +158,11 @@
         margin-right: 6px;
         margin-top: 1px;
       }
-      /* no-text prev button */
-      .webring-nav[data-button-text="false"] a.webring-btn.prev-btn {
+      [data-button-text="false"] .prev-btn {
         padding-top: 5px;
         padding-right: 12.5px;
       }
-      /* no-text next button */
-      .webring-nav[data-button-text="false"] a.webring-btn.next-btn {
+      [data-button-text="false"] .next-btn {
         padding-top: 5px;
         padding-left: 12.5px;
       }
@@ -180,7 +174,7 @@
       .webring-title {
         font-weight: 600;
       }
-      .webring-nav a.webring-btn {
+      .webring-btn {
         text-wrap: nowrap;
         color: #000000;
         font-weight: 600;
@@ -188,40 +182,41 @@
         border: 2.5px solid #000000;
         transition: background-color 0.2s ease, color 0.2s ease;
       }
-      .webring-nav a.webring-btn:hover {
+      .webring-btn:hover {
         background-color: #000000;
         color: #ffffff;
       }
-      .webring-nav a.webring-btn:focus {
+      .webring-btn:focus {
         outline: none;
         background-color: transparent;
         color: #000000;
       }
-      .webring-nav a.webring-btn:active {
+      .webring-btn:active {
         border-color: #000000;
         background-color: #000000;
         color: #ffffff;
       }
     `
-  };
+  });
+
+  // Track if styles have been applied
+  let stylesApplied = false;
 
   // Run immediately for widget initialization
   createWidget();
 
   function createWidget(scriptElement) {
-    const script = scriptElement || document.currentScript || (function() {
-      const scripts = document.getElementsByTagName('script');
-      return scripts[scripts.length - 1];
-    })();
+    // Find the script element, using a passed element, current script, or last script
+    const script = scriptElement || document.currentScript || document.getElementsByTagName('script')[document.getElementsByTagName('script').length - 1];
 
     if (!script) return;
 
     // Config from data attributes
     const memberUid = script.getAttribute('data-member-uid');
-    const widgetType = script.getAttribute('data-widget-type') || WIDGET_CONFIG.DEFAULT_TYPE;
-    const targetId = script.getAttribute('data-target-id') || WIDGET_CONFIG.DEFAULT_TARGET_ID;
+    const widgetType = script.getAttribute('data-widget-type') ?? WIDGET_CONFIG.DEFAULT_TYPE;
+    const targetId = script.getAttribute('data-target-id') ?? WIDGET_CONFIG.DEFAULT_TARGET_ID;
     const buttonText = script.getAttribute('data-button-text') !== 'false';
-    const stylesType = script.getAttribute('data-styles') || WIDGET_CONFIG.DEFAULT_STYLE_TYPE;
+    const stylesType = script.getAttribute('data-styles') ?? WIDGET_CONFIG.DEFAULT_STYLE_TYPE;
     const stylesOption = WIDGET_CONFIG.VALID_STYLE_TYPES.includes(stylesType) ? stylesType : WIDGET_CONFIG.DEFAULT_STYLE_TYPE;
 
     // Custom text data attributes
@@ -250,36 +245,67 @@
         return;
       }
 
-      // Apply custom texts if provided or use defaults based on enforcement settings
+      // Apply styles only once per page
+      if (!stylesApplied) {
+        applyStyles(stylesOption);
+        stylesApplied = true;
+      }
+
+      // Use DocumentFragment for DOM operations
+      const fragment = document.createDocumentFragment();
+
+      // Create main wrapper div
+      const wrapperDiv = document.createElement('div');
+      wrapperDiv.className = 'webring-nav';
+      wrapperDiv.setAttribute('data-widget-type', widgetType);
+      wrapperDiv.setAttribute('data-button-text', buttonText.toString());
+
+      // Apply custom texts efficiently
       const customTexts = {
-        prev: NAVIGATION_ACTIONS.prev.text_enforced ?
-          { ...NAVIGATION_ACTIONS.prev } :
-          (prevText ? { ...NAVIGATION_ACTIONS.prev, text: `« ${prevText}` } : NAVIGATION_ACTIONS.prev),
-        random: NAVIGATION_ACTIONS.random.text_enforced ?
-          { ...NAVIGATION_ACTIONS.random } :
-          (randomText ? {
-            ...NAVIGATION_ACTIONS.random,
-            text: `${logoSvg(20, 20, "margin-right: 4px; margin-top: 1px;")} ${randomText}`
-          } : NAVIGATION_ACTIONS.random),
-        next: NAVIGATION_ACTIONS.next.text_enforced ?
-          { ...NAVIGATION_ACTIONS.next } :
-          (nextText ? { ...NAVIGATION_ACTIONS.next, text: `${nextText} »` } : NAVIGATION_ACTIONS.next),
+        prev: NAVIGATION_ACTIONS.prev.text_enforced
+              ? NAVIGATION_ACTIONS.prev
+              : (prevText ? {...NAVIGATION_ACTIONS.prev, text: `« ${prevText}`} : NAVIGATION_ACTIONS.prev),
+        random: NAVIGATION_ACTIONS.random.text_enforced
+                ? NAVIGATION_ACTIONS.random
+                : (randomText ? {...NAVIGATION_ACTIONS.random, text: `${logoSvg(20, 20, "margin-right: 4px; margin-top: 1px;")} ${randomText}`} : NAVIGATION_ACTIONS.random),
+        next: NAVIGATION_ACTIONS.next.text_enforced
+              ? NAVIGATION_ACTIONS.next
+              : (nextText ? {...NAVIGATION_ACTIONS.next, text: `${nextText} »`} : NAVIGATION_ACTIONS.next),
         logoOnly: NAVIGATION_ACTIONS.logoOnly
       };
 
-      // Navigation links
+      // Add title if needed
       const config = WIDGET_TYPE_CONFIG[widgetType];
-      const linkElements = config.actions.map(action => {
-        const actionConfig = customTexts[action] || NAVIGATION_ACTIONS[action];
+      if (config.showTitle) {
+        const titleElem = document.createElement('span');
+        titleElem.className = 'webring-title';
+        titleElem.innerHTML = FULL_TEXT_DEFAULTS.widgetTitle.enforced ?
+          FULL_TEXT_DEFAULTS.widgetTitle.default :
+          (widgetText ?? FULL_TEXT_DEFAULTS.widgetTitle.default);
+        wrapperDiv.appendChild(titleElem);
+      }
+
+      // Create navigation container
+      const navElem = document.createElement('nav');
+      navElem.className = 'webring-buttons';
+
+      // Create buttons
+      config.actions.forEach(action => {
+        const actionConfig = customTexts[action];
 
         // Logo-only block
         if (action === 'logoOnly') {
-          return `<div class="${actionConfig.additionalClass}">${actionConfig.symbol}</div>`;
+          const logoDiv = document.createElement('div');
+          logoDiv.className = actionConfig.additionalClass;
+          logoDiv.innerHTML = actionConfig.symbol;
+          navElem.appendChild(logoDiv);
+          return;
         }
 
-        const url = `${baseUrl}/webring/${actionConfig.path}?source_member_uid=${memberUid}`;
-        let label = buttonText ? actionConfig.text : actionConfig.symbol;
-        const btnClass = `webring-btn${actionConfig.additionalClass ? ` ${actionConfig.additionalClass}` : ''}`;
+        const linkElem = document.createElement('a');
+        linkElem.href = `${baseUrl}/webring/${actionConfig.path}?source_member_uid=${memberUid}`;
+        linkElem.title = actionConfig.title;
+        linkElem.className = `webring-btn ${actionConfig.additionalClass}`;
 
         // One-way type case
         if (widgetType === 'one-way' && config.showLogoInButton && action === 'next') {
@@ -287,30 +313,21 @@
             FULL_TEXT_DEFAULTS.next.default :
             (nextText || customTexts.next.text.replace(' »', ''));
 
-          label = buttonText
+          linkElem.innerHTML = buttonText
             ? `<span class="webring-logo-inline">${logoSvg(20, 20)}</span> ${buttonTextContent} »`
             : `<span class="webring-logo-inline">${logoSvg(20, 20)}</span> ${actionConfig.symbol}`;
+        } else {
+          linkElem.innerHTML = buttonText ? actionConfig.text : actionConfig.symbol;
         }
 
-        return `<a href="${url}" title="${actionConfig.title}" class="${btnClass}">${label}</a>`;
-      }).join('\n          ');
+        navElem.appendChild(linkElem);
+      });
 
-      // Create widget HTML
-      const titleText = FULL_TEXT_DEFAULTS.widgetTitle.enforced ?
-        FULL_TEXT_DEFAULTS.widgetTitle.default :
-        (widgetText || FULL_TEXT_DEFAULTS.widgetTitle.default);
+      wrapperDiv.appendChild(navElem);
+      fragment.appendChild(wrapperDiv);
 
-      const title = config.showTitle ? `<span class="webring-title">${titleText}</span>` : '';
-      container.innerHTML = `
-        <div class="webring-nav" data-widget-type="${widgetType}" data-button-text="${buttonText}">
-          ${title}
-          <nav class="webring-buttons">
-            ${linkElements}
-          </nav>
-        </div>
-      `;
-
-      applyStyles(stylesOption);
+      container.innerHTML = '';
+      container.appendChild(fragment);
     };
 
     function applyStyles(styleOption) {

@@ -8,6 +8,7 @@ module Webring
     validates :url, presence: true, uniqueness: true
     validates :name, presence: true
     validates :description, presence: true
+    validates :callback_email, presence: true
 
     enum :status, { pending: 0, approved: 1, rejected: 2 }, default: :pending
 
