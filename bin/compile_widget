@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+require 'terser'
+
+widget_js_path = File.expand_path('../app/assets/javascripts/webring/widget.js', __dir__)
+widget_js_min_path = File.expand_path('../app/assets/javascripts/webring/widget.min.js', __dir__)
+
+widget_js = File.read(widget_js_path)
+# evaluate: false is needed to prevent the `code` from being evaluated and converted to "code"
+minified_js = Terser.compile(widget_js)
+
+File.write(widget_js_min_path, minified_js)

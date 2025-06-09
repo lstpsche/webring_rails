@@ -13,12 +13,12 @@ module Webring
         format.js do
           response.headers['Content-Type'] = 'application/javascript'
 
-          # Take the JavaScript file from the engine's assets and replace the customizable Logo SVG
+          # Take the minified JavaScript file from the engine's assets and replace the customizable Logo SVG
           widget_js =
             Webring::Engine
-            .root.join('app/assets/javascripts/webring/widget.js')
+            .root.join('app/assets/javascripts/webring/widget.min.js')
             .read
-            .gsub('<<REPLACE_ME_LOGO_SVG>>', logo_svg)
+            .gsub('"<<REPLACE_ME_LOGO_SVG_FUNCTION>>"', logo_svg_function)
             .gsub('"<<REPLACE_ME_TEXT_DEFAULTS>>"', JSON.generate(text_defaults))
 
           render js: widget_js
@@ -35,13 +35,20 @@ module Webring
       response.headers['Access-Control-Max-Age'] = '86400'
     end
 
+    # This function is used to generate the logo SVG function for the compiled widget.js file to overcome args names compression issue
+    def logo_svg_function
+      <<~JS
+        (width = 20, height = 20, style = "") => `#{logo_svg}`
+      JS
+    end
+
     # should include `${width}`, `${height}`, `${style}` in order to be customizable
     def logo_svg
-      <<~SVG
+      <<~HTML
         <svg width="${width}" height="${height}" style="${style}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M13 3L6 14H12L11 21L18 10H12L13 3Z" fill="currentColor"/>
         </svg>
-      SVG
+      HTML
     end
 
     # Provide default texts for the widget

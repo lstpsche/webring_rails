@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'rubocop', '~> 1.75'
   spec.add_development_dependency 'rubocop-rails', '~> 2.31'
+  spec.add_development_dependency 'terser', '~> 1.2'
 end

@@ -5,9 +5,9 @@ module Webring
     # should include `${width}`, `${height}`, `${style}` in order to be customizable
     # remove the method or call `super` to use the default logo
     def logo_svg
-      <<~SVG
+      <<~HTML
         Add your custom logo SVG here
-      SVG
+      HTML
     end
 
     # Override default texts for the widget

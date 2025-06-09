@@ -68,7 +68,7 @@
     }, {})
   );
 
-  const logoSvg = (width = 20, height = 20, style = "") => `<<REPLACE_ME_LOGO_SVG>>`;
+  const logoSvg = "<<REPLACE_ME_LOGO_SVG_FUNCTION>>";
 
   const NAVIGATION_ACTIONS = Object.freeze({
     prev: {
